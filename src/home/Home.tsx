@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { datos } from "./data";
+import React, { useEffect, useState } from "react";
+import { getDatos, fetchData } from "./data";
 import ListStudents from "./ListStudents";
 import SearchStudents from "./SearchStudents";
 import { DataType } from "./types";
@@ -7,6 +7,13 @@ import Menu from "./Menu";
 
 const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
+  const [datos, setDatos] = useState<DataType[]>([]);
+
+  useEffect(() => {
+    fetchData().then(() => {
+      setDatos(getDatos());
+    });
+  }, []);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
