@@ -1,11 +1,19 @@
 import Home from "./home/Home";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './components/Login/Login';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div>
-      <Home teacherID={1} />
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<Home />} />
+        {/* Otras rutas */}
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
