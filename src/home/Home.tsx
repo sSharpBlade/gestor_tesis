@@ -32,7 +32,7 @@ const Home: React.FC = () => {
   return (
     <div className="flex flex-col h-screen bg-stone-300">
       <div className="flex justify-between p-4">
-        <Menu />
+        <Menu TeacherID={teacherID}/>
       </div>
       <div className="flex justify-center items-center flex-grow">
         <div className="w-2/3 min-h-[809px]">
