@@ -1,41 +1,54 @@
 import React, { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './StudentForm.module.css';
 import { request } from './Student.request';
 
+interface StudentFormProps {
+    handleClose: () => void;
+    Teacher:number;
+}
 
-const StudentForm = () => {
-    const { register, formState: { errors }, handleSubmit, setValue, } = useForm();
+interface FormData {
+    cedula: string;
+    firstname: string;
+    lastname: string;
+    idCareer: string;
+    issue: string;
+    approvalDate: string;
+}
 
-    const onSubmit = async (data: any) => {
+const StudentForm: React.FC<StudentFormProps> = ({Teacher, handleClose }) => {
+    const { register, formState: { errors }, handleSubmit, setValue } = useForm<FormData>();
+
+    const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
         const formattedData = {
             student: {
                 cedula: data.cedula,
                 firstname: data.firstname,
                 lastname: data.lastname,
                 idCareer: parseInt(data.idCareer), // Convertir a número entero
-                idTeacher: 1 // Asignar un valor predeterminado para idTeacher
+                idTeacher: Teacher // Asignar un valor predeterminado para idTeacher
             },
             thesis: {
                 issue: data.issue,
                 approvalDate: data.approvalDate
             }
         };
-        request(formattedData);
+        await request(formattedData);
+        handleClose(); // Cerrar el modal después de enviar el formulario
     };
-
 
     const handleNumericInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = e.target.value;
         if (/^\d*$/.test(newValue)) {
-            setValue(e.target.name, newValue);
+            setValue(e.target.name as keyof FormData, newValue);
         } else {
-            setValue(e.target.name, newValue.slice(0, -1));
+            setValue(e.target.name as keyof FormData, newValue.slice(0, -1));
         }
         if (newValue.length === 11) {
-            setValue(e.target.name, newValue.slice(0, -1));
+            setValue(e.target.name as keyof FormData, newValue.slice(0, -1));
         }
     };
 
@@ -48,6 +61,7 @@ const StudentForm = () => {
             }
         }
     }, [errors.cedula]);
+
     useEffect(() => {
         if (errors.firstname && errors.firstname.type === 'required') {
             toast.error('Nombre es un campo requerido');
@@ -65,14 +79,15 @@ const StudentForm = () => {
             toast.error('Tema es un campo requerido');
         }
     }, [errors.issue]);
+
     return (
         <>
             <div className='container'>
                 <ToastContainer />
                 <h1>Asignar Estudiante</h1>
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(handleFormSubmit)}>
                     <div>
-                        <label >Cedula</label>
+                        <label>Cedula</label>
                         <input type="text"  {...register('cedula', {
                             required: true,
                             minLength: 10,
@@ -80,19 +95,19 @@ const StudentForm = () => {
                         })} />
                     </div>
                     <div>
-                        <label >Nombre</label>
+                        <label>Nombre</label>
                         <input type="text" {...register('firstname', {
                             required: true
                         })} />
                     </div>
                     <div>
-                        <label >Apellido</label>
+                        <label>Apellido</label>
                         <input type="text" {...register('lastname', {
                             required: true
                         })} />
                     </div>
                     <div>
-                        <label >Carrera</label>
+                        <label>Carrera</label>
                         <select {...register('idCareer')}>
                             <option value="1">Software</option>
                             <option value="2">Industrial</option>
@@ -102,13 +117,13 @@ const StudentForm = () => {
                         </select>
                     </div>
                     <div>
-                        <label >Tema</label>
+                        <label>Tema</label>
                         <input type="text" {...register('issue', {
                             required: true
                         })} />
                     </div>
                     <div>
-                        <label >Fecha Aprovado</label>
+                        <label>Fecha Aprobado</label>
                         <input type="date" {...register('approvalDate')} />
                     </div>
                     <input type="submit" value="Asignar" />
