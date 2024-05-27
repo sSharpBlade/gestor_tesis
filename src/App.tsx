@@ -3,7 +3,7 @@ import Home from "./home/Home";
 function App() {
   return (
     <div>
-      <Home />
+      <Home teacherID={1} />
     </div>
   );
 }

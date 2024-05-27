@@ -5,15 +5,19 @@ import SearchStudents from "./SearchStudents";
 import { DataType } from "./types";
 import Menu from "./Menu";
 
-const Home: React.FC = () => {
+interface HomeProps {
+  teacherID: number;
+}
+
+const Home: React.FC<HomeProps> = ({ teacherID }) => {
   const [searchText, setSearchText] = useState<string>("");
   const [datos, setDatos] = useState<DataType[]>([]);
 
   useEffect(() => {
-    fetchData().then(() => {
+    fetchData(teacherID).then(() => {
       setDatos(getDatos());
     });
-  }, []);
+  }, [teacherID]);
 
   const handleSearch = (value: string) => {
     setSearchText(value);
