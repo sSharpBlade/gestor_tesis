@@ -20,8 +20,8 @@ const Menu: React.FC<StudentFormProps> = ({TeacherID}) => {
   const handleClose = () => setShowModal(false);
 
   const handleFormSubmit = async (data: any) => {
-    await request(data);
-    handleClose();
+    return await request(data);
+
   };
 
 
@@ -57,7 +57,7 @@ const Menu: React.FC<StudentFormProps> = ({TeacherID}) => {
 
       <Modal
         title="Asignar Estudiante"
-        visible={showModal}
+        open={showModal}
         onCancel={handleClose}
         footer={null}
       >

@@ -5,7 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import './StudentForm.module.css';
 
 interface StudentFormProps {
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: any) => Promise<boolean>;
   handleClose: () => void;
   TeacherID:number
 }
@@ -20,7 +20,7 @@ interface FormData {
 }
 
 const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit, handleClose }) => {
-  const { register, formState: { errors }, handleSubmit, setValue } = useForm<FormData>();
+  const { register, formState: { errors }, handleSubmit, setValue,reset } = useForm<FormData>();
 
   const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
     const formattedData = {
@@ -28,16 +28,19 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit, handleClo
         cedula: data.cedula,
         firstname: data.firstname,
         lastname: data.lastname,
-        idCareer: parseInt(data.idCareer), // Convertir a número entero
-        idTeacher: TeacherID // Asignar un valor predeterminado para idTeacher
+        career: parseInt(data.idCareer), // Convertir a número entero
+        teacher: TeacherID // Asignar un valor predeterminado para idTeacher
       },
       thesis: {
         issue: data.issue,
         approvalDate: data.approvalDate
       }
     };
-    await onSubmit(formattedData);
-    handleClose(); // Cerrar el modal después de enviar el formulario
+    const isSuccess = await onSubmit(formattedData);
+    if (isSuccess) {
+      reset(); // Limpiar los campos del formulario
+      handleClose(); // Cerrar el modal si la solicitud fue exitosa
+    } 
   };
 
   const handleNumericInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,7 +86,6 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit, handleClo
   return (
     <div className='container'>
       <ToastContainer />
-      <h1>Asignar Estudiante</h1>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div>
           <label>Cedula</label>
