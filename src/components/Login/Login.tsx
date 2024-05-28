@@ -31,8 +31,11 @@ const Login: React.FC = () => {
       }
 
       const result = await response.json();
+      const userId = result.user.id; 
       console.log('Login successful:', result);
-      navigate('/dashboard'); // Redirige al usuario al dashboard
+      console.log('User ID:', userId); // Imprime el id del usuario en la consola
+
+      navigate('/dashboard',{ state: { userId } }); // Redirige al usuario al dashboard
     } catch (error) {
       setError('Invalid email or password');
       console.error('Error:', error);
