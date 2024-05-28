@@ -1,8 +1,8 @@
 import './Login.css';
 import imagenLogin from '../../images/imagenVioleta.png';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { handleLogin } from './servicioLogin'; // Asegúrate de ajustar la ruta de importación según tu estructura de carpetas
+import { useNavigate } from 'react-router-dom';// Asegúrate de ajustar la ruta de importación según tu estructura de carpetas
+import { handleLogin } from './servicioLogin';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -12,37 +12,7 @@ const Login: React.FC = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-
-    const data = {
-      email: email,
-      password: password,
-    };
-
-    try {
-      const response = await fetch('http://localhost:3000/teachers/by-email', { // Ajusta esta URL a tu endpoint real
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error('Invalid credentials');
-      }
-
-      const result = await response.json();
-      console.log('Login successful:', result);
-      const userId = result.idTeacher; 
-      console.log('User ID:', userId); // Imprime el id del usuario en la consola
-
-      navigate('/dashboard',{ state: { userId } }); // Redirige al usuario al dashboard
-    } catch (error) {
-      setError('Invalid email or password');
-      console.error('Error:', error);
-    }
-
+      await handleLogin(email, password, setError, navigate);
   };
 
   return (

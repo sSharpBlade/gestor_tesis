@@ -35,6 +35,7 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit }) => {
         approvalDate: data.approvalDate
       }
     };
+    console.log(formattedData)
     const isSuccess = await onSubmit(formattedData);
     if (isSuccess) {
       reset(); // Cerrar el modal si la solicitud fue exitosa
