@@ -12,7 +12,37 @@ const Login: React.FC = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await handleLogin(email, password, setError, navigate);
+
+
+    const data = {
+      email: email,
+      password: password,
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/teachers/by-email', { // Ajusta esta URL a tu endpoint real
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Invalid credentials');
+      }
+
+      const result = await response.json();
+      console.log('Login successful:', result);
+      const userId = result.idTeacher; 
+      console.log('User ID:', userId); // Imprime el id del usuario en la consola
+
+      navigate('/dashboard',{ state: { userId } }); // Redirige al usuario al dashboard
+    } catch (error) {
+      setError('Invalid email or password');
+      console.error('Error:', error);
+    }
+
   };
 
   return (

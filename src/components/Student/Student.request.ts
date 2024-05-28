@@ -21,7 +21,6 @@ export const request = async(data:any):Promise<boolean>=>{
         }
 
         const result = await response.json();
-        toast.success('Estudiante asignado con éxito!');
         console.log('Success:', result);
         return true
     } catch (error) {
