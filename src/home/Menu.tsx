@@ -8,6 +8,8 @@ import {
 } from "@ant-design/icons";
 import { request } from '../components/Student/Student.request';
 import StudentForm from '../components/Student/StudentForm';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -19,6 +21,7 @@ const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+  const navigate = useNavigate();
 
   const handleFormSubmit = async (data: any) => {
     const respose = await request(data);
@@ -28,6 +31,10 @@ const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
     return respose;
   };
 
+  const handleLogout = () => {
+    console.log("Cerrando sesión...");
+    navigate('/');  // Redirige al inicio
+  };
 
   return (
     <>
@@ -53,9 +60,7 @@ const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
         <FloatButton
           tooltip={<div>Cerrar Sesión</div>}
           icon={<DisconnectOutlined />}
-          onClick={() => {
-            console.log("Cerrando sesión...");
-          }}
+          onClick={handleLogout}
         />
       </FloatButton.Group>
 
