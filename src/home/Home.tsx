@@ -29,8 +29,6 @@ const Home: React.FC = () => {
   }, [teacherId, reload]); // Añadido reload como dependencia
 
   const navigate = useNavigate();
-  const [searchText, setSearchText] = useState<string>("");
-  const [datos, setDatos] = useState<DataType[]>([]);
   const teacherID = localStorage.getItem('teacherID');
 
   useEffect(() => {
