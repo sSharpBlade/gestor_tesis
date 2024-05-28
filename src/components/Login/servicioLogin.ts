@@ -32,7 +32,7 @@ export const handleLogin = async (
        // Redirige al usuario al dashboard
     } catch (error) {
       setError('Invalid email or password');
-      console.error('Error:', error);
+      //console.error('Error:', error);
     }
   };
   
