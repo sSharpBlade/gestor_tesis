@@ -77,6 +77,14 @@ body {
     box-sizing: border-box;
 }
 
+form input[type="text"], form input[type="date"], form input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #4c007d;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
 .numero-intentos {
     text-align: center;
     font-size: 15px;
@@ -103,3 +111,11 @@ body {
 .sign-in-btn:hover {
     background-color: #4c007d;
 }
+
+.error-message {
+    color: #320053;
+    margin-top: 5%;
+    align-items: center;
+    text-align: center;
+    font-size: 75%;
+  }

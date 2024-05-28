@@ -22,7 +22,6 @@ const Login: React.FC = () => {
       </div>
       <div className="login-form">
         <h2>Sign In</h2>
-        {error && <div className="error-message">{error}</div>}
         <form onSubmit={onSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email :</label>
@@ -53,6 +52,7 @@ const Login: React.FC = () => {
             </div>
           </div>
           <button type="submit" className="sign-in-btn">Sign In</button>
+          {error && <div className="error-message">{error}</div>}
         </form>
       </div>
     </div>
