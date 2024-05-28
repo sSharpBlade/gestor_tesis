@@ -6,7 +6,6 @@ import './StudentForm.module.css';
 
 interface StudentFormProps {
   onSubmit: (data: any) => Promise<boolean>;
-  handleClose: () => void;
   TeacherID:number
 }
 
@@ -19,9 +18,9 @@ interface FormData {
   approvalDate: string;
 }
 
-const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit, handleClose }) => {
+const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit }) => {
   const { register, formState: { errors }, handleSubmit, setValue,reset } = useForm<FormData>();
-
+  
   const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
     const formattedData = {
       student: {
@@ -38,8 +37,7 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit, handleClo
     };
     const isSuccess = await onSubmit(formattedData);
     if (isSuccess) {
-      reset(); // Limpiar los campos del formulario
-      handleClose(); // Cerrar el modal si la solicitud fue exitosa
+      reset(); // Cerrar el modal si la solicitud fue exitosa
     } 
   };
 

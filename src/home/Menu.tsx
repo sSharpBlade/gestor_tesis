@@ -8,19 +8,23 @@ import {
 } from "@ant-design/icons";
 import { request } from '../components/Student/Student.request';
 import StudentForm from '../components/Student/StudentForm';
+import { useLocation } from 'react-router-dom';
 
-interface StudentFormProps {
-  TeacherID:number
+interface ListStudentsProps {
+  onDataChange: () => void
 }
-
-const Menu: React.FC<StudentFormProps> = ({TeacherID}) => {
+const Menu: React.FC<ListStudentsProps> = ({onDataChange}) => {
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-
+  const location = useLocation();
+  const teacherId = location.state?.userId || null; 
   const handleFormSubmit = async (data: any) => {
-    return await request(data);
-
+    const respose = await request(data);
+    if (respose) {
+      onDataChange();
+    }
+    return respose;
   };
 
 
@@ -60,7 +64,7 @@ const Menu: React.FC<StudentFormProps> = ({TeacherID}) => {
         onCancel={handleClose}
         footer={null}
       >
-        <StudentForm TeacherID = {TeacherID} onSubmit={handleFormSubmit} handleClose={handleClose} />
+        <StudentForm TeacherID = {teacherId} onSubmit={handleFormSubmit} />
       </Modal>
     </>
   );
