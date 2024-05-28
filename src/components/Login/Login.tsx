@@ -2,6 +2,7 @@ import './Login.css';
 import imagenLogin from '../../images/imagenVioleta.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { handleLogin } from './servicioLogin'; // Asegúrate de ajustar la ruta de importación según tu estructura de carpetas
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
@@ -9,8 +10,9 @@ const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
 
     const data = {
       email: email,
@@ -40,6 +42,7 @@ const Login: React.FC = () => {
       setError('Invalid email or password');
       console.error('Error:', error);
     }
+
   };
 
   return (
@@ -50,7 +53,7 @@ const Login: React.FC = () => {
       <div className="login-form">
         <h2>Sign In</h2>
         {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleLogin}>
+        <form onSubmit={onSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email :</label>
             <div className="input-wrapper">
