@@ -58,7 +58,7 @@ const Home: React.FC = () => {
     <div className="flex flex-col h-screen bg-stone-300">
       <div className="flex justify-between p-4">
 
-        <Menu onDataChange={showSuccessMessage}  />
+        <Menu teacherID={Number(teacherID)} onDataChange={showSuccessMessage}  />
 
       </div>
       <div className="flex justify-center items-center flex-grow">

@@ -9,12 +9,13 @@ import {
 import { request } from '../components/Student/Student.request';
 import StudentForm from '../components/Student/StudentForm';
 
-const teacherID = localStorage.getItem('teacherID');
+
 
 interface ListStudentsProps {
   onDataChange: () => void
+  teacherID:number
 }
-const Menu: React.FC<ListStudentsProps> = ({onDataChange}) => {
+const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
