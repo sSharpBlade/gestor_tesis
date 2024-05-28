@@ -7,29 +7,26 @@ import ListStudents from "./ListStudents";
 import SearchStudents from "./SearchStudents";
 import { DataType } from "./types";
 import Menu from "./Menu";
-import { useLocation } from 'react-router-dom';
 import { toast } from "react-toastify";
 
 const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [datos, setDatos] = useState<DataType[]>([]);
   const [reload, setReload] = useState<boolean>(false); // Estado para manejar la recarga
-  const location = useLocation();
-  const teacherId = location.state?.userId || null;
+  const teacherID = localStorage.getItem('teacherID');
   const showSuccessMessage = () => {
     toast.success('Estudiante asignado con éxito!');
     handleDataChange()
   };
   useEffect(() => {
-    if (teacherId) {
-      fetchData(teacherId).then(() => {
+    if (teacherID) {
+      fetchData(Number(teacherID)).then(() => {
         setDatos(getDatos());
       });
     }
-  }, [teacherId, reload]); // Añadido reload como dependencia
+  }, [teacherID, reload]); // Añadido reload como dependencia
 
   const navigate = useNavigate();
-  const teacherID = localStorage.getItem('teacherID');
 
   useEffect(() => {
     if (!teacherID) {

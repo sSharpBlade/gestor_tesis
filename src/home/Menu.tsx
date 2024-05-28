@@ -8,7 +8,8 @@ import {
 } from "@ant-design/icons";
 import { request } from '../components/Student/Student.request';
 import StudentForm from '../components/Student/StudentForm';
-import { useLocation } from 'react-router-dom';
+
+const teacherID = localStorage.getItem('teacherID');
 
 interface ListStudentsProps {
   onDataChange: () => void
@@ -17,8 +18,7 @@ const Menu: React.FC<ListStudentsProps> = ({onDataChange}) => {
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-  const location = useLocation();
-  const teacherId = location.state?.userId || null; 
+
   const handleFormSubmit = async (data: any) => {
     const respose = await request(data);
     if (respose) {
@@ -64,7 +64,7 @@ const Menu: React.FC<ListStudentsProps> = ({onDataChange}) => {
         onCancel={handleClose}
         footer={null}
       >
-        <StudentForm TeacherID = {teacherId} onSubmit={handleFormSubmit} />
+        <StudentForm TeacherID = {Number(teacherID)} onSubmit={handleFormSubmit} />
       </Modal>
     </>
   );

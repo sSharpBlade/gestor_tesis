@@ -1,4 +1,4 @@
-// src/services/authService.ts
+
 export const handleLogin = async (
     email: string,
     password: string,
@@ -11,24 +11,25 @@ export const handleLogin = async (
     };
   
     try {
-      const response = await fetch('http://localhost:3000/teachers/by-email', {
+      const response = await fetch('http://localhost:3000/teachers/by-email', { // Ajusta esta URL a tu endpoint real
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
       });
-  
+
       if (!response.ok) {
         throw new Error('Invalid credentials');
       }
-  
+
       const result = await response.json();
       console.log('Login successful:', result);
-      const { id_teacher } = result;
-      localStorage.setItem('teacherID', id_teacher); // Almacena el teacherID en localStorage
-      navigate('/dashboard'); // Redirige al usuario al dashboard
-      console.log(id_teacher);
+      const userId = result.idTeacher; 
+      console.log('User ID:', userId); // Imprime el id del usuario en la consola
+      localStorage.setItem('teacherID', userId);
+      navigate('/dashboard');
+       // Redirige al usuario al dashboard
     } catch (error) {
       setError('Invalid email or password');
       console.error('Error:', error);
