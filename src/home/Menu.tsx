@@ -1,23 +1,20 @@
-import React, { useState } from 'react';
-import { FloatButton, Modal,  } from 'antd';
+import React, { useState } from "react";
+import { FloatButton, Modal } from "antd";
 import {
   BarsOutlined,
   DisconnectOutlined,
   DiffOutlined,
   UnlockOutlined,
 } from "@ant-design/icons";
-import { request } from '../components/Student/Student.request';
-import StudentForm from '../components/Student/StudentForm';
-import { useNavigate } from 'react-router-dom';
-
-
-
+import { request } from "../components/Student/Student.request";
+import StudentForm from "../components/Student/StudentForm";
+import { useNavigate } from "react-router-dom";
 
 interface ListStudentsProps {
-  onDataChange: () => void
-  teacherID:number
+  onDataChange: () => void;
+  teacherID: number;
 }
-const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
+const Menu: React.FC<ListStudentsProps> = ({ teacherID, onDataChange }) => {
   const [showModal, setShowModal] = useState(false);
   const handleShow = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
@@ -33,7 +30,7 @@ const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
 
   const handleLogout = () => {
     console.log("Cerrando sesión...");
-    navigate('/');  // Redirige al inicio
+    navigate("/"); // Redirige al inicio
   };
 
   return (
@@ -50,13 +47,13 @@ const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
           icon={<DiffOutlined />}
           onClick={handleShow}
         />
-        <FloatButton
+        {/* <FloatButton
           tooltip={<div>Cambiar contraseña</div>}
           icon={<UnlockOutlined />}
           onClick={() => {
             console.log("Cambiando contraseña...");
           }}
-        />
+        /> */}
         <FloatButton
           tooltip={<div>Cerrar Sesión</div>}
           icon={<DisconnectOutlined />}
@@ -70,7 +67,10 @@ const Menu: React.FC<ListStudentsProps> = ({teacherID,onDataChange}) => {
         onCancel={handleClose}
         footer={null}
       >
-        <StudentForm TeacherID = {Number(teacherID)} onSubmit={handleFormSubmit} />
+        <StudentForm
+          TeacherID={Number(teacherID)}
+          onSubmit={handleFormSubmit}
+        />
       </Modal>
     </>
   );
