@@ -1,7 +1,10 @@
 export interface DataType {
+  id: string;
+  idThesis: number;
   name: string;
   career: string;
-  id: string;
+  issue: string;
+  approvalDate: Date;
   state: string;
   percentage: number;
 }
