@@ -1,13 +1,31 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table, Tag, Avatar, Button } from "antd";
 import type { TableColumnsType } from "antd";
 import { DataType } from "./types";
 import EditFilled from "@ant-design/icons/lib/icons/EditFilled";
+import ModalInfo from "../components/Modal/ModalInfo";
 
 interface ListStudentsProps {
   data: DataType[];
 }
+
 const ListStudents: React.FC<ListStudentsProps> = ({ data }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<DataType | null>(null);
+
+  const showModal = (student: DataType) => {
+    setSelectedStudent(student);
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
   const generateFilters = (data: DataType[], key: keyof DataType) => {
     const uniqueValues = Array.from(new Set(data.map((item) => item[key])));
     return uniqueValues.map((value) => ({
@@ -79,12 +97,10 @@ const ListStudents: React.FC<ListStudentsProps> = ({ data }) => {
     {
       width: 50,
       title: "Opciones",
-      render: ({ id }) => (
+      render: (student) => (
         <Button
           className="border-0 bg-transparent"
-          onClick={() => {
-            console.log(id);
-          }}
+          onClick={() => showModal(student)}
         >
           <EditFilled />
         </Button>
@@ -93,15 +109,25 @@ const ListStudents: React.FC<ListStudentsProps> = ({ data }) => {
   ];
 
   return (
-    <Table
-      columns={columns}
-      dataSource={data.map((item) => ({ ...item, key: item.id }))}
-      pagination={{
-        pageSize: 10,
-        hideOnSinglePage: true,
-      }}
-      scroll={{ y: 650 }}
-    />
+    <>
+      <Table
+        columns={columns}
+        dataSource={data.map((item) => ({ ...item, key: item.id }))}
+        pagination={{
+          pageSize: 10,
+          hideOnSinglePage: true,
+        }}
+        scroll={{ y: 650 }}
+      />
+      {selectedStudent && (
+        <ModalInfo
+          isModalOpen={isModalOpen}
+          handleOk={handleOk}
+          handleCancel={handleCancel}
+          student={selectedStudent}
+        />
+      )}
+    </>
   );
 };
 
