@@ -18,6 +18,7 @@ async function fetchDataReport(cedula: string): Promise<void> {
       issue: item.title,
       date: item.date,
       percentage: item.percentage,
+      signed: item.signedAt,
     }));
   } catch (error) {
     console.error("Error al obtener los datos:", error);

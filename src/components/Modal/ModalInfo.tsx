@@ -1,10 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Button, Modal, Table, TableColumnsType } from "antd";
+import {
+  Button,
+  Modal,
+  Table,
+  TableColumnsType,
+  Space,
+  notification,
+  Flex,
+  Progress,
+} from "antd";
 import { fetchDataReport, getDatosReport } from "./dataInfo";
 import { ReportType } from "./reportType";
 import {
   DeleteOutlined,
   EditFilled,
+  ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
 
@@ -46,6 +56,19 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
     }
   }, [student, isModalOpen]);
 
+  const [api, contextHolder] = notification.useNotification();
+
+  const openNotification = (pauseOnHover: boolean) => () => {
+    api.open({
+      icon: <ExclamationCircleOutlined style={{ color: "red" }} />,
+      message: "A tener en cuenta !!",
+      description:
+        "Este informe ya se encuentra firmado, cualquier modificación será responsabilidad suya",
+      showProgress: true,
+      pauseOnHover,
+    });
+  };
+
   const columns: TableColumnsType<ReportType> = [
     {
       title: "Fecha",
@@ -71,6 +94,9 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             className="border-0 bg-transparent"
             onClick={() => {
               console.log("Editar reporte:", dataReport.idReport);
+              dataReport.signed != null
+                ? openNotification(true)()
+                : console.log("Aún es permitido");
             }}
           >
             <EditFilled />
@@ -90,60 +116,67 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
   ];
 
   return (
-    <Modal
-      centered
-      loading={loading}
-      title={`Información de ${student.name || "Estudiante"}`}
-      open={isModalOpen}
-      onOk={handleOk}
-      onCancel={handleCancel}
-      footer={false}
-    >
-      <p>
-        <b>Cédula:</b> {student.id}
-      </p>
-      <p>
-        <b>Nombre:</b> {student.name}
-      </p>
-      <br />
-      <p>
-        <b>Carrera:</b> {student.career}
-      </p>
-      <p>
-        <b>Tema:</b> {student.issue}
-      </p>
-      <p>
-        <b>Fecha de aprobación:</b> {student.approvalDate}
-      </p>
-      <p>
-        <b>Estado:</b> {student.state}
-      </p>
-      <p>
-        <b>Porcentaje:</b> {student.percentage}%
-      </p>
-      <br />
-      <h3>
-        <b>Informes:</b>
-      </h3>
-      <Button
-        className="border-0 bg-transparent"
-        onClick={() => {
-          console.log("Tesis:", student.idThesis);
-        }}
-      >
-        <PlusCircleOutlined />
-      </Button>
-      <Table
-        columns={columns}
-        dataSource={dataReport.map((item) => ({ ...item, key: item.idReport }))}
+    <>
+      {contextHolder}
+      <Modal
+        centered
         loading={loading}
-        pagination={{
-          pageSize: 5,
-          hideOnSinglePage: true,
-        }}
-        // scroll={{ y: 73 }}
-      />
-    </Modal>
+        title={`Información de ${student.name || "Estudiante"}`}
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        footer={false}
+      >
+        <p>
+          <b>Cédula:</b> {student.id}
+        </p>
+        <p>
+          <b>Nombre:</b> {student.name}
+        </p>
+        <br />
+        <p>
+          <b>Carrera:</b> {student.career}
+        </p>
+        <p>
+          <b>Tema:</b> {student.issue}
+        </p>
+        <p>
+          <b>Fecha de aprobación:</b> {student.approvalDate}
+        </p>
+        <p>
+          <b>Estado:</b> {student.state}
+        </p>
+        <p>
+          <b>Porcentaje:</b>
+        </p>
+
+        <br />
+        <h3>
+          <b>Informes:</b>
+        </h3>
+        <Button
+          className="border-0 bg-transparent"
+          onClick={() => {
+            console.log("Tesis:", student.idThesis);
+          }}
+        >
+          <PlusCircleOutlined />
+        </Button>
+        <Table
+          columns={columns}
+          dataSource={dataReport.map((item) => ({
+            ...item,
+            key: item.idReport,
+          }))}
+          loading={loading}
+          pagination={{
+            pageSize: 5,
+            hideOnSinglePage: true,
+          }}
+          // scroll={{ y: 73 }}
+        />
+      </Modal>
+    </>
   );
 };
 
