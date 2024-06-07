@@ -149,7 +149,12 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
         <p>
           <b>Porcentaje:</b>
         </p>
-
+        <Flex gap="small" vertical>
+          <Progress
+            percent={student.percentage}
+            percentPosition={{ align: "start", type: "outer" }}
+          />
+        </Flex>
         <br />
         <h3>
           <b>Informes:</b>
