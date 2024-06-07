@@ -1,7 +1,11 @@
-async function fetchData(idThesis: number): Promise<void> {
+import { ReportType } from "./reportType";
+
+let datos: [];
+
+async function fetchDataReport(cedula: string): Promise<void> {
   try {
     const response = await fetch(
-      `http://localhost:3000/thesis/report/${idThesis}`
+      `http://localhost:3000/reports/student/${cedula}`
     );
 
     if (!response.ok) {
@@ -10,14 +14,10 @@ async function fetchData(idThesis: number): Promise<void> {
 
     const responseData = await response.json();
     datos = responseData.map((item: any) => ({
-      id: item.student.cedula,
-      name: `${item.student.lastname} ${item.student.firstname}`,
-      career: item.student.career.name,
-      state: item.state,
-      percentage: item.finalstate,
-      issue: item.issue,
-      approvalDate: item.approvalDate,
-      idThesis: item.idThesis,
+      idReport: item.idReport,
+      issue: item.title,
+      date: item.date,
+      percentage: item.percentage,
     }));
   } catch (error) {
     console.error("Error al obtener los datos:", error);
@@ -25,8 +25,8 @@ async function fetchData(idThesis: number): Promise<void> {
   }
 }
 
-export function getDatos(): DataType[] {
+export function getDatosReport(): ReportType[] {
   return datos;
 }
 
-export { fetchData };
+export { fetchDataReport };
