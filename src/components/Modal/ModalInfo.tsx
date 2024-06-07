@@ -4,7 +4,7 @@ import {
   Modal,
   Table,
   TableColumnsType,
-  Space,
+  Popconfirm,
   notification,
   Flex,
   Progress,
@@ -33,6 +33,14 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataReport, setDataReport] = useState<ReportType[]>([]);
+
+  const confirm = (idReport: number) =>
+    new Promise((resolve) => {
+      console.log(`Informe eliminado con ID: ${idReport}`);
+      setTimeout(() => {
+        resolve(null);
+      }, 1500);
+    });
 
   useEffect(() => {
     if (isModalOpen) {
@@ -102,14 +110,16 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             <EditFilled />
           </Button>
 
-          <Button
-            className="border-0 bg-transparent"
-            onClick={() => {
-              console.log("Eliminar reporte:", dataReport.idReport);
-            }}
+          <Popconfirm
+            title="Eliminar informe"
+            description={"Se eliminará el informe: " + dataReport.issue}
+            onConfirm={() => confirm(dataReport.idReport)}
+            onOpenChange={() => {}}
           >
-            <DeleteOutlined />
-          </Button>
+            <Button className="border-0 bg-transparent">
+              <DeleteOutlined />
+            </Button>
+          </Popconfirm>
         </div>
       ),
     },
