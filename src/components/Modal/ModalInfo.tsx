@@ -42,6 +42,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
       setTimeout(() => {
         setDataReport(data);
         resolve(null);
+        window.location.reload();
       }, 500);
     });
   };
