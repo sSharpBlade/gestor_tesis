@@ -10,7 +10,7 @@ import {
   Progress,
   Tooltip,
 } from "antd";
-import { fetchDataReport, getDatosReport } from "./dataInfo";
+import { deleteReport, fetchDataReport, getDatosReport } from "./dataInfo";
 import { ReportType } from "./reportType";
 import {
   DeleteOutlined,
@@ -35,13 +35,16 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [dataReport, setDataReport] = useState<ReportType[]>([]);
 
-  const confirm = (idReport: number) =>
-    new Promise((resolve) => {
-      console.log(`Informe eliminado con ID: ${idReport}`);
+  const confirm = async (idReport: number) => {
+    return new Promise(async (resolve) => {
+      await deleteReport(idReport);
+      const data = await getDatosReport();
       setTimeout(() => {
+        setDataReport(data);
         resolve(null);
-      }, 1500);
+      }, 500);
     });
+  };
 
   useEffect(() => {
     if (isModalOpen) {
