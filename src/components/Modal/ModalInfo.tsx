@@ -8,6 +8,7 @@ import {
   notification,
   Flex,
   Progress,
+  Tooltip,
 } from "antd";
 import { fetchDataReport, getDatosReport } from "./dataInfo";
 import { ReportType } from "./reportType";
@@ -66,16 +67,16 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
 
   const [api, contextHolder] = notification.useNotification();
 
-  const openNotification = (pauseOnHover: boolean) => () => {
-    api.open({
-      icon: <ExclamationCircleOutlined style={{ color: "red" }} />,
-      message: "A tener en cuenta !!",
-      description:
-        "Este informe ya se encuentra firmado, cualquier modificación será responsabilidad suya",
-      showProgress: true,
-      pauseOnHover,
-    });
-  };
+  const openNotification =
+    (pauseOnHover: boolean, message: string, description: string) => () => {
+      api.open({
+        icon: <ExclamationCircleOutlined style={{ color: "red" }} />,
+        message: message,
+        description: description,
+        showProgress: true,
+        pauseOnHover,
+      });
+    };
 
   const columns: TableColumnsType<ReportType> = [
     {
@@ -102,9 +103,21 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             className="border-0 bg-transparent"
             onClick={() => {
               console.log("Editar reporte:", dataReport.idReport);
-              dataReport.signed != null
-                ? openNotification(true)()
-                : console.log("Aún es permitido");
+              if (dataReport.signed != null) {
+                openNotification(
+                  true,
+                  "A tener en cuenta !!",
+                  "Este informe ya se encuentra firmado, cualquier modificación será responsabilidad suya"
+                )();
+              } else if (checkIfOutOfTime(dataReport.date)) {
+                openNotification(
+                  true,
+                  "Informe fuera de tiempo",
+                  "Este informe va ser modificado fuera del tiempo permitido"
+                )();
+              } else {
+                console.log("Aún es permitido");
+              }
             }}
           >
             <EditFilled />
@@ -124,6 +137,17 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
       ),
     },
   ];
+
+  const checkIfOutOfTime = (reportDate: string): boolean => {
+    const report = new Date(reportDate);
+    const now = new Date();
+
+    return (
+      report.getFullYear() < now.getFullYear() ||
+      (report.getFullYear() === now.getFullYear() &&
+        report.getMonth() < now.getMonth())
+    );
+  };
 
   return (
     <>
@@ -169,14 +193,17 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
         <h3>
           <b>Informes:</b>
         </h3>
-        <Button
-          className="border-0 bg-transparent"
-          onClick={() => {
-            console.log("Tesis:", student.idThesis);
-          }}
-        >
-          <PlusCircleOutlined />
-        </Button>
+        <Tooltip placement="right" title={"Agregar informe"} arrow={true}>
+          <Button
+            disabled={student.percentage === 100}
+            className="border-0 bg-transparent"
+            onClick={() => {
+              console.log("Tesis:", student.idThesis);
+            }}
+          >
+            <PlusCircleOutlined />
+          </Button>
+        </Tooltip>
         <Table
           columns={columns}
           dataSource={dataReport.map((item) => ({
