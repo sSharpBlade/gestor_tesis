@@ -1,4 +1,4 @@
-import './Login.css';
+import './Login.module.css';
 import imagenLogin from '../../images/imagenVioleta.png';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';// Asegúrate de ajustar la ruta de importación según tu estructura de carpetas
