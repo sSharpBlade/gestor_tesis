@@ -18,6 +18,7 @@ import {
   ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom"; 
 
 interface ModalInfoProps {
   isModalOpen: boolean;
@@ -34,6 +35,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataReport, setDataReport] = useState<ReportType[]>([]);
+  const navigate = useNavigate();
 
   const confirm = async (idReport: number) => {
     return new Promise(async (resolve) => {
@@ -202,7 +204,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             disabled={student.percentage === 100}
             className="border-0 bg-transparent"
             onClick={() => {
-              console.log("Tesis:", student.idThesis);
+              navigate("/informe", { state: { student } }); // Navega a la ruta "/informe" con el estado del estudiante
             }}
           >
             <PlusCircleOutlined />
