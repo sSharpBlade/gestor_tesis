@@ -1,26 +1,10 @@
+// src/Informe.tsx
+
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './inform.module.css';
-
-interface Student {
-  career: string;
-  name: string;
-  issue: string;
-  approvalDate: string;
-  idThesis: number; // Añadido idThesis aquí
-}
-
-interface Inform {
-  authorizeSignature:string;
-  date:string;
-  progressPercentage: number;
-  reportTitle: string;
-  idThesis:number;
-}
-
-interface LocationState {
-  student: Student;
-}
+import { Student, LocationState, Inform } from './informTypes';
+import { createReport } from './reportService';
 
 const Informe: React.FC = () => {
   const location = useLocation();
@@ -35,7 +19,7 @@ const Informe: React.FC = () => {
     setCurrentDate(formattedDate);
   }, []);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -43,7 +27,6 @@ const Informe: React.FC = () => {
     const reportNumber = (form.elements.namedItem('reportNumber') as HTMLInputElement).value;
     const progressPercentage = (form.elements.namedItem('progressPercentage') as HTMLInputElement).value;
     const authorizeSignature = (form.elements.namedItem('authorizeSignature') as HTMLInputElement).checked;
-    
 
     if (!dateInput || !reportNumber || !progressPercentage) {
       alert("Todos los campos son requeridos.");
@@ -55,16 +38,15 @@ const Informe: React.FC = () => {
       return;
     }
 
-    const formData : Inform ={
+    const formData: Inform = {
       date: dateInput,
-      reportTitle: `INFORME Nº: ${reportNumber}`,
-      progressPercentage : Number(progressPercentage),
-      authorizeSignature: authorizeSignature ? currentDate : '', //aqui quiero que envies la fecha actual no un boolean 
-      idThesis: student.idThesis 
+      title: `INFORME Nº: ${reportNumber}`,
+      percentage: Number(progressPercentage),
+      signedAt: authorizeSignature ? currentDate : '', // Enviar la fecha actual
+      idThesis: student.idThesis
     };
 
-    // Aquí puedes hacer un POST request con formData
-    console.log(formData);
+    await createReport(formData);
   };
 
   return (
@@ -103,8 +85,7 @@ const Informe: React.FC = () => {
           </div>
           <div>
             <b>AUTORIZAR FIRMA :</b>
-            <input type='checkbox' name='authorizeSignature' className={styles.checkboxInput} required
-            />
+            <input type='checkbox' name='authorizeSignature' className={styles.checkboxInput} required />
           </div>
           <div>
             <button type='submit'>Guardar</button>
