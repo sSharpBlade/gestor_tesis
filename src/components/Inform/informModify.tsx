@@ -1,14 +1,16 @@
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './inform.module.css';
-import { Student, LocationState, Inform } from './informTypes';
-import { createReport } from './reportService';
+import { Student } from './informTypes';
 
-const Informe: React.FC = () => {
+interface LocationState {
+    student: Student;
+  }
+  
+const InformModify: React.FC = () => {
   const location = useLocation();
   const locationState = location.state as LocationState;
   const { student } = locationState || {};
-
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
@@ -17,35 +19,6 @@ const Informe: React.FC = () => {
     setCurrentDate(formattedDate);
   }, []);
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const form = event.currentTarget;
-    const dateInput = (form.elements.namedItem('date') as HTMLInputElement).value;
-    const reportNumber = (form.elements.namedItem('reportNumber') as HTMLInputElement).value;
-    const progressPercentage = (form.elements.namedItem('progressPercentage') as HTMLInputElement).value;
-    const authorizeSignature = (form.elements.namedItem('authorizeSignature') as HTMLInputElement).checked;
-
-    if (!dateInput || !reportNumber || !progressPercentage) {
-      alert("Todos los campos son requeridos.");
-      return;
-    }
-
-    if (Number(reportNumber) <= 0 || Number(progressPercentage) <= 0) {
-      alert("Los números deben ser mayores que cero.");
-      return;
-    }
-
-    const formData: Inform = {
-      date: dateInput,
-      title: `INFORME Nº: ${reportNumber}`,
-      percentage: Number(progressPercentage),
-      signedAt: authorizeSignature ? currentDate : '', // Enviar la fecha actual
-      idThesis: student.idThesis
-    };
-
-    await createReport(formData);
-  };
 
   return (
     <div className={styles.containerInform}>
@@ -56,11 +29,10 @@ const Informe: React.FC = () => {
         <h3>FACULTAD DE INGENIERÍA EN SISTEMAS ELECTRÓNICA E INDUSTRIAL</h3>
         <h3>{student?.career.toUpperCase()}</h3>
         
-        <form onSubmit={handleSubmit}>
+        <form>
           <p>
             <b>FECHA :</b> 
             <input type='date' 
-            //value: si se dio clic en editar informe que establezca el valor de {date} del ReportType
             name='date' 
             className={styles.dateInput} 
             defaultValue={currentDate} />
@@ -78,32 +50,21 @@ const Informe: React.FC = () => {
             <b>FECHA DE APROBACIÓN DE LA PROPUESTA :</b> {student?.approvalDate}
           </p>
           <p>
-            <b>TITULO DEL INFORME:</b> 
+            <b>TITULO DEL INFORME:</b> INFORME Nº: 
             <input type='text'
              name='reportNumber' 
-             //value: si se dio clic en editar informe que establezca el valor de {issue} del ReportType
              className={styles.numInformeInput} 
-              />
+             min="1" />
           </p>
           <p>
             <b>PORCENTAJE DE AVANCE :</b>
             <input type='number' 
             name='progressPercentage' 
-            //value: si se dio clic en editar informe que establezca el valor de {percentage} del ReportType
             className={styles.percentageInput} 
             min="1" />
           </p>
           <div>
             <b>ACTIVIDADES</b>
-          </div>
-          <div>
-            <b>AUTORIZAR FIRMA :</b>
-            {/*Aqui quiero que si se dio clic en editar informe deshabilite esta opcon o se oculte*/}
-            <input 
-            type='checkbox' 
-            name='authorizeSignature' 
-            className={styles.checkboxInput} 
-            required />
           </div>
           <div>
             <button type='submit'>Guardar</button>
@@ -120,4 +81,4 @@ const Informe: React.FC = () => {
   );
 };
 
-export default Informe;
+export default InformModify;

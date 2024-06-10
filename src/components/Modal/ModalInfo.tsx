@@ -18,7 +18,7 @@ import {
   ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 
 interface ModalInfoProps {
   isModalOpen: boolean;
@@ -108,21 +108,31 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
           <Button
             className="border-0 bg-transparent"
             onClick={() => {
-              console.log("Editar reporte:", dataReport.idReport);
-              if (dataReport.signed != null) {
-                openNotification(
-                  true,
-                  "A tener en cuenta !!",
-                  "Este informe ya se encuentra firmado, cualquier modificación será responsabilidad suya"
-                )();
-              } else if (checkIfOutOfTime(dataReport.date)) {
-                openNotification(
-                  true,
-                  "Informe fuera de tiempo",
-                  "Este informe va ser modificado fuera del tiempo permitido"
-                )();
+              if (dataReport.idReport) {
+                //console.log(dataReport)
+                navigate("/informeModificar", {
+                  state: {
+                    student,
+                    report: dataReport
+                  },
+                });
+                if (dataReport.signed != null) {
+                  openNotification(
+                    true,
+                    "A tener en cuenta !!",
+                    "Este informe ya se encuentra firmado, cualquier modificación será responsabilidad suya"
+                  )();
+                } else if (checkIfOutOfTime(dataReport.date)) {
+                  openNotification(
+                    true,
+                    "Informe fuera de tiempo",
+                    "Este informe va ser modificado fuera del tiempo permitido"
+                  )();
+                } else {
+                  console.log("Aún es permitido");
+                }
               } else {
-                console.log("Aún es permitido");
+                console.error("ID del reporte no está definido.");
               }
             }}
           >
@@ -133,7 +143,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             title="Eliminar informe"
             description={"Se eliminará el informe: " + dataReport.issue}
             onConfirm={() => confirm(dataReport.idReport)}
-            onOpenChange={() => {}}
+            onOpenChange={() => { }}
           >
             <Button className="border-0 bg-transparent">
               <DeleteOutlined />
@@ -222,7 +232,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             pageSize: 5,
             hideOnSinglePage: true,
           }}
-          // scroll={{ y: 73 }}
+        // scroll={{ y: 73 }}
         />
       </Modal>
     </>
