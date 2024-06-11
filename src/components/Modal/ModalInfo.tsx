@@ -17,7 +17,7 @@ import {
   EditFilled,
   ExclamationCircleOutlined,
   PlusCircleOutlined,
-} from "@ant-design/icons";
+} from "@ant-design/icons"
 import { useNavigate } from "react-router-dom";
 import FormularioReporte from "../Report/ReportModal"; // Asegúrate de que la ruta sea correcta
 
@@ -241,7 +241,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
           onCancel={() => setIsFormOpen(false)} // Función para cerrar el modal
           footer={null}
         >
-          <FormularioReporte />
+          <FormularioReporte student={student}/>
         </Modal>
       </Modal>
     </>

@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
 import './Reporte.module.css';
 
-const FormularioReporte: React.FC = () => {
+interface FormularioReporteProps {
+  student: {
+    career: string;
+    name: string;
+    issue: string;
+    // Añade aquí otras propiedades del estudiante según sea necesario
+    id: string;
+    approvalDate: string;
+    state: string;
+    percentage: number;
+    idThesis: number;
+  };
+}
+
+const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
   const [isOpen, setIsOpen] = useState(false);
   const currentDate = new Date().toISOString().slice(0, 10);
 
@@ -21,18 +35,16 @@ const FormularioReporte: React.FC = () => {
         {isOpen && (
             <div className="modal">
                 <div className="modalContent">
-
                     <div className="formularioReporte">
                         <h3>INFORME MENSUAL DEL AVANCE DEL TRABAJO DE TITULACIÓN</h3>
                         <h3>UNIVERSIDAD TÉCNICA DE AMBATO</h3>
                         <h3>FACULTAD DE INGENIERÍA EN SISTEMAS ELECTRÓNICA E INDUSTRIAL</h3>
-                        <h3>{/* Aque que se envie la carrera del estudiante*/}</h3><br></br>
+                        <h3>{student.career.toUpperCase()}</h3><br></br>
                         <p>
-                            <b>NOMBRE DEL ESTUDIANTE: </b>{/*Aqui Quiero que ubiques el el nombre del studienate
-                            ese dato lo obtendras del otro componente*/}
+                            <b>NOMBRE DEL ESTUDIANTE:  </b>{student.name.toUpperCase()}
                         </p>
                         <p>
-                            <b>TEMA DEL TRABAJO DE TITULACIÓN:</b>{/*<Aqui pon el tema de trabajo de titulacion*/}
+                            <b>TEMA DEL TRABAJO DE TITULACIÓN:  </b>{student.issue.toUpperCase()}
                         </p>
                         <br></br>
                         <form onSubmit={handleSubmit}>
@@ -62,7 +74,7 @@ const FormularioReporte: React.FC = () => {
             </div>
         )}
     </div>
-);
+  );
 };
 
 export default FormularioReporte;
