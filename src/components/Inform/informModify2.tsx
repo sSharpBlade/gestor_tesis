@@ -19,20 +19,58 @@ interface ReportType {
   issue: string;
   percentage: number;
   title: string;
-    idReport: number; 
+  idReport: number; 
 }
 
 const InformModify2: React.FC = () => {
   const location = useLocation();
   const { student, dataReport } = location.state as { student: Student, dataReport: ReportType };
-  console.log(dataReport)
   const [currentDate, setCurrentDate] = useState('');
+  const [percentage, setPercentage] = useState(dataReport.percentage);
+  const [title, setTitle] = useState(dataReport.issue);
 
   useEffect(() => {
     const now = new Date();
     const formattedDate = now.toISOString().split('T')[0]; // Formato YYYY-MM-DD
     setCurrentDate(formattedDate);
   }, []);
+
+  const handlePercentageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPercentage(parseInt(e.target.value, 10));
+  };
+
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTitle(e.target.value);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const reportData = {
+      modsigned: currentDate,
+      percentage: percentage,
+      title: title
+    };
+
+    try {
+      const response = await fetch(`http://localhost:3000/reports/${dataReport.idReport}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reportData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      // Maneja la respuesta aquí si es necesario
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error('Error en la petición PATCH:', error);
+    }
+  };
 
   return (
     <div className={styles.containerInform}>
@@ -43,13 +81,13 @@ const InformModify2: React.FC = () => {
         <h3>FACULTAD DE INGENIERÍA EN SISTEMAS ELECTRÓNICA E INDUSTRIAL</h3>
         <h3>{student?.career.toUpperCase()}</h3>
         
-        <form>
+        <form onSubmit={handleSubmit}>
           <p>
             <b>FECHA :</b> 
             <input type='date' 
-            name='date' 
-            className={styles.dateInput} 
-            defaultValue={dataReport.date} />
+              name='date' 
+              className={styles.dateInput} 
+              defaultValue={dataReport.date} />
           </p>
           <p>
             <b>NOMBRE DEL ESTUDIANTE :</b> {student?.name.toUpperCase()}
@@ -66,18 +104,20 @@ const InformModify2: React.FC = () => {
           <p>
             <b>TITULO DEL INFORME:</b>
             <input type='text'
-            name='reportNumber' 
-            className={styles.numInformeInput} 
-            defaultValue={dataReport.issue}
-            min="1" />
+              name='reportNumber' 
+              className={styles.numInformeInput} 
+              value={title}
+              onChange={handleTitleChange}
+              min="1" />
           </p>
           <p>
             <b>PORCENTAJE DE AVANCE :</b>
             <input type='number' 
-            name='progressPercentage' 
-            className={styles.percentageInput} 
-            defaultValue={dataReport.percentage.toString()}
-            min="1" />
+              name='progressPercentage' 
+              className={styles.percentageInput} 
+              value={percentage.toString()}
+              onChange={handlePercentageChange}
+              min="1" />
           </p>
           <div>
             <b>ACTIVIDADES</b>
