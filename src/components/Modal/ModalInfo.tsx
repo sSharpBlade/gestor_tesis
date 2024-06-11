@@ -166,7 +166,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
         footer={false}
       >
         <p>
-          <b>Cédula:</b> {student.id}
+          <b>Cédula:</b> {student.id} 
         </p>
         <p>
           <b>Nombre:</b> {student.name}
