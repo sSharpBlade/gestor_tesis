@@ -72,7 +72,7 @@ const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
         // Redirigir después de 2 segundos
         setTimeout(() => {
           navigate('/informeModificar', { state: { student, reportData } });
-        }, 2000);
+        }, 1000);
       } else {
         console.error('Error al crear el informe');
       }

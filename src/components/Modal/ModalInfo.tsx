@@ -112,11 +112,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             onClick={() => {
               if (dataReport.idReport) {
                 console.log(dataReport)
-                navigate("/informeModificar", {
-                  state: {
-                    student,
-                  },
-                });
+                navigate("/informeModificar2",{ state: { student, dataReport} });
                 if (dataReport.signed != null) {
                   openNotification(
                     true,

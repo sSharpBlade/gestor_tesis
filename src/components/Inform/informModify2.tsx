@@ -13,57 +13,25 @@ interface Student {
   idThesis: number;
 }
 
-interface ReportResponse {
-  idReport: number;
-  issue: string; // Aquí estamos usando `issue`
+interface ReportType {
   date: string;
+  issue: string;
   percentage: number;
   title: string;
+    idReport: number; 
 }
 
-const InformModify: React.FC = () => {
+const InformModify2: React.FC = () => {
   const location = useLocation();
-  const { student, reportData } = location.state as { student: Student, reportData: ReportResponse };
-  console.log("tema: "+reportData.title)
-  console.log('Location state:', location.state); // Depuración
-
+  const { student, dataReport } = location.state as { student: Student, dataReport: ReportType };
+  console.log(dataReport)
   const [currentDate, setCurrentDate] = useState('');
-  const [title, setTitle] = useState(reportData ? reportData.title : ''); // Asegúrate de usar `issue`
-  const [percentage, setPercentage] = useState(reportData.percentage.toString());
 
   useEffect(() => {
     const now = new Date();
     const formattedDate = now.toISOString().split('T')[0]; // Formato YYYY-MM-DD
     setCurrentDate(formattedDate);
   }, []);
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    const updatedReport = {
-      modsigned: currentDate,
-      percentage: parseInt(percentage),
-      title: title,
-    };
-
-    try {
-      const response = await fetch(`http://localhost:3000/reports/${reportData.idReport}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedReport),
-      });
-
-      if (response.ok) {
-        console.log('Reporte actualizado exitosamente');
-      } else {
-        console.error('Error al actualizar el reporte');
-      }
-    } catch (error) {
-      console.error('Error al enviar la solicitud:', error);
-    }
-  };
 
   return (
     <div className={styles.containerInform}>
@@ -74,13 +42,13 @@ const InformModify: React.FC = () => {
         <h3>FACULTAD DE INGENIERÍA EN SISTEMAS ELECTRÓNICA E INDUSTRIAL</h3>
         <h3>{student?.career.toUpperCase()}</h3>
         
-        <form onSubmit={handleSubmit}>
+        <form>
           <p>
             <b>FECHA :</b> 
             <input type='date' 
             name='date' 
             className={styles.dateInput} 
-            defaultValue={reportData.date} />
+            defaultValue={dataReport.date} />
           </p>
           <p>
             <b>NOMBRE DEL ESTUDIANTE :</b> {student?.name.toUpperCase()}
@@ -97,18 +65,17 @@ const InformModify: React.FC = () => {
           <p>
             <b>TITULO DEL INFORME:</b>
             <input type='text'
-              name='reportTitle' 
-              className={styles.numInformeInput} 
-              defaultValue={reportData.title} // Asegúrate de usar `issue`
-              onChange={(e) => setTitle(e.target.value)} />
+            name='reportNumber' 
+            className={styles.numInformeInput} 
+            defaultValue={dataReport.issue}
+            min="1" />
           </p>
           <p>
             <b>PORCENTAJE DE AVANCE :</b>
             <input type='number' 
             name='progressPercentage' 
             className={styles.percentageInput} 
-            value={percentage}
-            onChange={(e) => setPercentage(e.target.value)}
+            defaultValue={dataReport.percentage.toString()}
             min="1" />
           </p>
           <div>
@@ -129,5 +96,4 @@ const InformModify: React.FC = () => {
   );
 };
 
-export default InformModify;
-//listo no lecambies nada aaaaaaaaaaa
+export default InformModify2;
