@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Reporte.module.css';
 
 interface FormularioReporteProps {
@@ -28,6 +29,8 @@ const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
   const [authorizeSignature, setAuthorizeSignature] = useState(false);
   const [reportResponse, setReportResponse] = useState<ReportResponse | null>(null);
+  
+  const navigate = useNavigate(); // Hook para redirigir
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -65,6 +68,11 @@ const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
         setReportResponse(reportData);
         console.log(reportData); // Imprimir los datos por consola
         toggleModal(); // Cerrar el modal después de enviar el formulario
+
+        // Redirigir después de 2 segundos
+        setTimeout(() => {
+          navigate('/informeModificar', { state: { student, reportData } });
+        }, 2000);
       } else {
         console.error('Error al crear el informe');
       }

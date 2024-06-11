@@ -1,16 +1,29 @@
-import React, { FormEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './inform.module.css';
-import { Student } from './informTypes';
 
-interface LocationState {
-    student: Student;
-  }
-  
+interface Student {
+  career: string;
+  name: string;
+  issue: string;
+  id: string;
+  approvalDate: string;
+  state: string;
+  percentage: number;
+  idThesis: number;
+}
+
+interface ReportResponse {
+  idReport: number;
+  title: string;
+  date: string;
+  percentage: number;
+}
+
 const InformModify: React.FC = () => {
   const location = useLocation();
-  const locationState = location.state as LocationState;
-  const { student } = locationState || {};
+  const { student, reportData } = location.state as { student: Student, reportData: ReportResponse };
+
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
@@ -18,7 +31,6 @@ const InformModify: React.FC = () => {
     const formattedDate = now.toISOString().split('T')[0]; // Formato YYYY-MM-DD
     setCurrentDate(formattedDate);
   }, []);
-
 
   return (
     <div className={styles.containerInform}>
@@ -35,7 +47,7 @@ const InformModify: React.FC = () => {
             <input type='date' 
             name='date' 
             className={styles.dateInput} 
-            defaultValue={currentDate} />
+            defaultValue={reportData.date} />
           </p>
           <p>
             <b>NOMBRE DEL ESTUDIANTE :</b> {student?.name}
@@ -54,6 +66,7 @@ const InformModify: React.FC = () => {
             <input type='text'
              name='reportNumber' 
              className={styles.numInformeInput} 
+             defaultValue={reportData.title}
              min="1" />
           </p>
           <p>
@@ -61,6 +74,7 @@ const InformModify: React.FC = () => {
             <input type='number' 
             name='progressPercentage' 
             className={styles.percentageInput} 
+            defaultValue={reportData.percentage.toString()}
             min="1" />
           </p>
           <div>
