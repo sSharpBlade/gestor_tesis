@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import styles from './inform.module.css';
+import ActivityTable from '../Activities/table';
 
 interface Student {
   career: string;
@@ -80,6 +81,8 @@ const InformModify2: React.FC = () => {
           </p>
           <div>
             <b>ACTIVIDADES</b>
+            <ActivityTable id={dataReport.idReport} />
+
           </div>
           <div>
             <button type='submit'>Guardar</button>
