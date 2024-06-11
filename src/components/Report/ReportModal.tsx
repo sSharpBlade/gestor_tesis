@@ -14,12 +14,20 @@ interface FormularioReporteProps {
   };
 }
 
+interface ReportResponse {
+  idReport: number;
+  title: string;
+  date: string;
+  percentage: number;
+}
+
 const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [reportNumber, setReportNumber] = useState('');
   const [progressPercentage, setProgressPercentage] = useState<number>(0);
   const [authorizeSignature, setAuthorizeSignature] = useState(false);
+  const [reportResponse, setReportResponse] = useState<ReportResponse | null>(null);
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
@@ -27,7 +35,9 @@ const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+    const formData = new FormData(event.currentTarget);
+    const progressPercentage = parseInt(formData.get('progressPercentage') as string, 10);
+    
     const informe = {
       idThesis: student.idThesis,
       date: date,
@@ -45,7 +55,15 @@ const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
       });
 
       if (response.ok) {
-        console.log('Informe creado exitosamente');
+        const data = await response.json();
+        const reportData: ReportResponse = {
+          idReport: data.idReport,
+          title: data.title,
+          date: data.date,
+          percentage: data.percentage,
+        };
+        setReportResponse(reportData);
+        console.log(reportData); // Imprimir los datos por consola
         toggleModal(); // Cerrar el modal después de enviar el formulario
       } else {
         console.error('Error al crear el informe');
