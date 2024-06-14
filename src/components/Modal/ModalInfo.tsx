@@ -19,7 +19,7 @@ import {
   PlusCircleOutlined,
 } from "@ant-design/icons"
 import { useNavigate } from "react-router-dom";
-import FormularioReporte from "../Report/ReportModal"; // Asegúrate de que la ruta sea correcta
+import CrearInforme from "../Inform/CrearInformeModal"; // Importa CrearInforme // Asegúrate de que la ruta sea correcta
 
 interface ModalInfoProps {
   isModalOpen: boolean;
@@ -36,8 +36,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataReport, setDataReport] = useState<ReportType[]>([]);
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false); // Estado para controlar la visibilidad del nuevo modal
-  const navigate = useNavigate();
+  const [isCrearInformeModalOpen, setIsCrearInformeModalOpen] = useState<boolean>(false);
 
   const confirm = async (idReport: number) => {
     return new Promise(async (resolve) => {
@@ -112,7 +111,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             onClick={() => {
               if (dataReport.idReport) {
                 console.log(dataReport)
-                navigate("/informeModificar2",{ state: { student, dataReport} });
+                //navigate("/informeModificar2",{ state: { student, dataReport} });
                 if (dataReport.signed != null) {
                   openNotification(
                     true,
@@ -211,9 +210,11 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             disabled={student.percentage === 100}
             className="border-0 bg-transparent"
             onClick={() => {
-              setIsFormOpen(true);
+              //setIdThesis(student.idThesis); // Guardar el idThesis
+              //setIsFormOpen(true); // Abrir el modal
+              setIsCrearInformeModalOpen(true); 
               console.log(student.idThesis);
-            }} // Cambia el estado para mostrar el nuevo modal
+            }} 
           >
             <PlusCircleOutlined />
           </Button>
@@ -230,16 +231,12 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             hideOnSinglePage: true,
           }}
         />
-        {/* Modal para el FormularioReporte */}
-        <Modal
-          title="Agregar Informe"
-          open={isFormOpen}
-          onCancel={() => setIsFormOpen(false)} // Función para cerrar el modal
-          footer={null}
-        >
-          <FormularioReporte student={student}/>
-        </Modal>
       </Modal>
+      <CrearInforme 
+        idThesis={student.idThesis} 
+        isModalOpen={isCrearInformeModalOpen}
+        handleCancel={() => setIsCrearInformeModalOpen(false)} 
+      />
     </>
   );
 };

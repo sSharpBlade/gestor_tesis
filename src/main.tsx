@@ -7,6 +7,6 @@ import CrearInforme from "./components/Inform/CrearInformeModal";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <CrearInforme />
+    < App />
   </React.StrictMode>
 );

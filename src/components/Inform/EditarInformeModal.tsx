@@ -3,7 +3,6 @@ import { Button, Modal, Input, DatePicker, Space, InputNumber, Switch } from 'an
 import type { DatePickerProps, InputNumberProps, InputRef } from 'antd';
 import ActivityTable from '../Activities/table';
 
-const { TextArea } = Input;
 
 const EditarInforme: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);

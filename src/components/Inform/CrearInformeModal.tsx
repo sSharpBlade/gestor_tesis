@@ -2,30 +2,22 @@ import React, { useRef, useState } from 'react';
 import { Button, Modal, Input, DatePicker, Space, Switch, Form } from 'antd';
 import type { DatePickerProps, InputRef, FormProps } from 'antd';
 
-const CrearInforme: React.FC = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+interface Informe {
+  date: string;
+  title: string;
+  idThesis: number;
+}
+
+interface CrearInformeProps {
+  idThesis: number;
+  isModalOpen: boolean;
+  handleCancel: () => void;
+}
+
+const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, handleCancel }) => {
   const [input, setInput] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
   const inputRef = useRef<InputRef>(null);
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCancel = () => {
-    if (isDirty) {
-      Modal.confirm({
-        title: 'Warning',
-        content: 'No ha guardado sus cambios, ¿desea salir sin guardar?',
-        onOk: () => {
-          setIsModalOpen(false);
-          setIsDirty(false);
-        },
-      });
-    } else {
-      setIsModalOpen(false);
-    }
-  };
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
     console.log(date, dateString);
@@ -39,8 +31,12 @@ const CrearInforme: React.FC = () => {
   };
 
   const onFinish: FormProps['onFinish'] = (values) => {
-    console.log('Success:', values);
-    setIsModalOpen(false);
+    const informe: Informe = {
+      ...values,
+      idThesis,
+    };
+    console.log('Success:', informe);
+    handleCancel();
     setIsDirty(false);
   };
 
@@ -48,15 +44,29 @@ const CrearInforme: React.FC = () => {
     console.log('Failed:', errorInfo);
   };
 
+  const handleModalClose = () => {
+    if (isDirty) {
+      Modal.confirm({
+        title: 'Confirmar salida',
+        content: 'Hay cambios no guardados, ¿está seguro de que desea salir?',
+        okText: 'Sí',
+        cancelText: 'No',
+        onOk: () => {
+          setIsDirty(false);
+          handleCancel();
+        },
+      });
+    } else {
+      handleCancel();
+    }
+  };
+
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal
-      </Button>
       <Modal
         title={<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>ANEXO 5</div>}
         open={isModalOpen}
-        onCancel={handleCancel}
+        onCancel={handleModalClose}
         footer={null}
         width={400}
       >
@@ -67,7 +77,7 @@ const CrearInforme: React.FC = () => {
           <p style={{ fontSize: '14px', fontWeight: 'bold' }}>Fecha :</p>
           <DatePicker onChange={onChange} />
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <p style={{ fontSize: '14px', fontWeight: 'bold', marginLeft: '8px' }}>Título :</p>
+            <p style={{ fontSize: '14px', fontWeight: 'bold', marginLeft: '8px' }}>Título :</p>
             <Switch
               checked={input}
               checkedChildren="Input"
@@ -77,7 +87,6 @@ const CrearInforme: React.FC = () => {
                 setIsDirty(true);
               }}
             />
-            
           </div>
           {input ? <Input {...sharedProps} /> : <Input.TextArea rows={3} {...sharedProps} />}
         </Space>
@@ -89,7 +98,12 @@ const CrearInforme: React.FC = () => {
           autoComplete="off"
         >
           <Form.Item wrapperCol={{ span: 24 }}>
-            <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ width: '100%' }}
+              onClick={() => console.log(idThesis)}
+            >
               Submit
             </Button>
           </Form.Item>
