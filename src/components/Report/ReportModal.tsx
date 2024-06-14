@@ -73,7 +73,7 @@ const FormularioReporte: React.FC<FormularioReporteProps> = ({ student }) => {
         setTimeout(() => {
           navigate('/informeModificar', { state: { student, reportData } });
         }, 1000);
-      } else {
+      } else {  
         console.error('Error al crear el informe');
       }
     } catch (error) {

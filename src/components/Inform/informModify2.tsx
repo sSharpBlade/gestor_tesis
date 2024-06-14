@@ -19,7 +19,7 @@ interface ReportType {
   issue: string;
   percentage: number;
   title: string;
-  idReport: number; 
+  idReport: number;
 }
 
 const InformModify2: React.FC = () => {
@@ -61,7 +61,9 @@ const InformModify2: React.FC = () => {
       });
 
       if (!response.ok) {
+        alert('El informe se modifico con exito');
         throw new Error('Network response was not ok');
+        
       }
 
       // Maneja la respuesta aquí si es necesario
@@ -80,13 +82,13 @@ const InformModify2: React.FC = () => {
         <h3>UNIVERSIDAD TÉCNICA DE AMBATO</h3>
         <h3>FACULTAD DE INGENIERÍA EN SISTEMAS ELECTRÓNICA E INDUSTRIAL</h3>
         <h3>{student?.career.toUpperCase()}</h3>
-        
+        <br></br>
         <form onSubmit={handleSubmit}>
           <p>
-            <b>FECHA :</b> 
-            <input type='date' 
-              name='date' 
-              className={styles.dateInput} 
+            <b>FECHA :</b>
+            <input type='date'
+              name='date'
+              className={styles.dateInput}
               defaultValue={dataReport.date} />
           </p>
           <p>
@@ -104,17 +106,18 @@ const InformModify2: React.FC = () => {
           <p>
             <b>TITULO DEL INFORME:</b>
             <input type='text'
-              name='reportNumber' 
-              className={styles.numInformeInput} 
+              name='reportNumber'
+              className={styles.numInformeInput}
               value={title}
               onChange={handleTitleChange}
               min="1" />
           </p>
           <p>
             <b>PORCENTAJE DE AVANCE :</b>
-            <input type='number' 
-              name='progressPercentage' 
-              className={styles.percentageInput} 
+            <br></br>
+            <input type='number'
+              name='progressPercentage'
+              className={styles.percentageInput}
               value={percentage.toString()}
               onChange={handlePercentageChange}
               min="1" />
@@ -128,6 +131,7 @@ const InformModify2: React.FC = () => {
             <button type='submit'>Guardar</button>
           </div>
         </form>
+        
       </div>
       <div className={styles.rightSection}>
         <h2>Sección para la visualización del documento</h2>

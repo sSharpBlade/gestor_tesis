@@ -57,6 +57,7 @@ const InformModify: React.FC = () => {
       });
 
       if (response.ok) {
+        alert('El informe se guardo con exito');
         console.log('Reporte actualizado exitosamente');
       } else {
         console.error('Error al actualizar el reporte');
@@ -74,7 +75,7 @@ const InformModify: React.FC = () => {
         <h3>UNIVERSIDAD TÉCNICA DE AMBATO</h3>
         <h3>FACULTAD DE INGENIERÍA EN SISTEMAS ELECTRÓNICA E INDUSTRIAL</h3>
         <h3>{student?.career.toUpperCase()}</h3>
-        
+        <br></br>
         <form onSubmit={handleSubmit}>
           <p>
             <b>FECHA :</b> 
@@ -105,6 +106,7 @@ const InformModify: React.FC = () => {
           </p>
           <p>
             <b>PORCENTAJE DE AVANCE :</b>
+            <br></br>
             <input type='number' 
             name='progressPercentage' 
             className={styles.percentageInput} 
