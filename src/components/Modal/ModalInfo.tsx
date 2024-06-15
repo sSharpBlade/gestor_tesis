@@ -18,7 +18,6 @@ import {
   ExclamationCircleOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons"
-import { useNavigate } from "react-router-dom";
 import EditarInforme from "../Inform/EditarInformeModal";
 import CrearInforme from "../Inform/CrearInformeModal"; // Importa CrearInforme // Asegúrate de que la ruta sea correcta
 

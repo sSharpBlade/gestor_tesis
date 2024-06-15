@@ -20,7 +20,7 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
   const [form] = Form.useForm();
   const inputRef = useRef<InputRef>(null);
 
-  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+  const onChange: DatePickerProps['onChange'] = ( dateString) => {
     form.setFieldsValue({ date: dateString });
     setIsDirty(true);
   };

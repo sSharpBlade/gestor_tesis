@@ -1,8 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Modal, Input, DatePicker, InputNumber, Form } from 'antd';
-import type { DatePickerProps, InputNumberProps, InputRef } from 'antd';
 import ActivityTable from '../Activities/table';
-import moment from 'moment';
 
 interface Student {
   career: string;
