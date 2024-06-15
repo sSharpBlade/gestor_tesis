@@ -19,6 +19,7 @@ import {
   PlusCircleOutlined,
 } from "@ant-design/icons"
 import { useNavigate } from "react-router-dom";
+import EditarInforme from "../Inform/EditarInformeModal";
 import CrearInforme from "../Inform/CrearInformeModal"; // Importa CrearInforme // Asegúrate de que la ruta sea correcta
 
 interface ModalInfoProps {
@@ -37,6 +38,9 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
   const [loading, setLoading] = useState<boolean>(true);
   const [dataReport, setDataReport] = useState<ReportType[]>([]);
   const [isCrearInformeModalOpen, setIsCrearInformeModalOpen] = useState<boolean>(false);
+  const [isEditarInformeModalOpen, setIsEditarInformeModalOpen] = useState<boolean>(false);
+  const [selectedReport, setSelectedReport] = useState<ReportType | null>(null);
+  // const navigate = useNavigate();
 
   const confirm = async (idReport: number) => {
     return new Promise(async (resolve) => {
@@ -110,8 +114,10 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             className="border-0 bg-transparent"
             onClick={() => {
               if (dataReport.idReport) {
+                setSelectedReport(dataReport);  // Guardar el informe seleccionado
+                setIsEditarInformeModalOpen(true);
                 console.log(dataReport)
-                //navigate("/informeModificar2",{ state: { student, dataReport} });
+
                 if (dataReport.signed != null) {
                   openNotification(
                     true,
@@ -174,7 +180,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
         footer={false}
       >
         <p>
-          <b>Cédula:</b> {student.id} 
+          <b>Cédula:</b> {student.id}
         </p>
         <p>
           <b>Nombre:</b> {student.name}
@@ -212,9 +218,9 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             onClick={() => {
               //setIdThesis(student.idThesis); // Guardar el idThesis
               //setIsFormOpen(true); // Abrir el modal
-              setIsCrearInformeModalOpen(true); 
+              setIsCrearInformeModalOpen(true);
               console.log(student.idThesis);
-            }} 
+            }}
           >
             <PlusCircleOutlined />
           </Button>
@@ -232,11 +238,20 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
           }}
         />
       </Modal>
-      <CrearInforme 
-        idThesis={student.idThesis} 
+      <CrearInforme
+        idThesis={student.idThesis}
         isModalOpen={isCrearInformeModalOpen}
-        handleCancel={() => setIsCrearInformeModalOpen(false)} 
+        handleCancel={() => setIsCrearInformeModalOpen(false)}
       />
+      {selectedReport && (
+        <EditarInforme
+          isModalOpen={isEditarInformeModalOpen}
+          handleOk={() => setIsEditarInformeModalOpen(false)}
+          handleCancel={() => setIsEditarInformeModalOpen(false)}
+          student={student}
+          dataReport={selectedReport}  
+        />
+      )}
     </>
   );
 };

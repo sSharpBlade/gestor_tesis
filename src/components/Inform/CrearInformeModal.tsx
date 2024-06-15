@@ -17,10 +17,11 @@ interface CrearInformeProps {
 const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, handleCancel }) => {
   const [input, setInput] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
+  const [form] = Form.useForm();
   const inputRef = useRef<InputRef>(null);
 
   const onChange: DatePickerProps['onChange'] = (date, dateString) => {
-    console.log(date, dateString);
+    form.setFieldsValue({ date: dateString });
     setIsDirty(true);
   };
 
@@ -30,14 +31,38 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
     onChange: () => setIsDirty(true),
   };
 
-  const onFinish: FormProps['onFinish'] = (values) => {
+  const onFinish: FormProps['onFinish'] = async (values) => {
     const informe: Informe = {
       ...values,
       idThesis,
     };
     console.log('Success:', informe);
-    handleCancel();
-    setIsDirty(false);
+
+    try {
+      const response = await fetch('http://localhost:3000/reports', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(informe),
+      });
+
+      if (response.ok) {
+        Modal.success({
+          title: 'Éxito',
+          content: 'Su informe se ha creado correctamente',
+        });
+        handleCancel();
+        setIsDirty(false);
+      } else {
+        throw new Error('Error en la creación del informe');
+      }
+    } catch (error) {
+      Modal.error({
+        title: 'Error',
+        content: 'No se pudo crear su informe',
+      });
+    }
   };
 
   const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
@@ -73,30 +98,41 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
           <p style={{ fontWeight: 'bold' }}>Agregar Informe</p>
         </div>
-        <Space direction="vertical" style={{ width: '100%', marginTop: '16px' }}>
-          <p style={{ fontSize: '14px', fontWeight: 'bold' }}>Fecha :</p>
-          <DatePicker onChange={onChange} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <p style={{ fontSize: '14px', fontWeight: 'bold', marginLeft: '8px' }}>Título :</p>
-            <Switch
-              checked={input}
-              checkedChildren="Input"
-              unCheckedChildren="TextArea"
-              onChange={() => {
-                setInput(!input);
-                setIsDirty(true);
-              }}
-            />
-          </div>
-          {input ? <Input {...sharedProps} /> : <Input.TextArea rows={3} {...sharedProps} />}
-        </Space>
         <Form
+          form={form}
           name="basic"
           style={{ marginTop: '16px' }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
+          <Space direction="vertical" style={{ width: '100%', marginTop: '16px' }}>
+            <Form.Item
+              name="date"
+              rules={[{ required: true, message: 'Por favor seleccione una fecha' }]}
+            >
+              <p style={{ fontSize: '14px', fontWeight: 'bold' }}>Fecha :</p>
+              <DatePicker onChange={onChange} />
+            </Form.Item>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <p style={{ fontSize: '14px', fontWeight: 'bold', marginLeft: '8px' }}>Título :</p>
+              <Switch
+                checked={input}
+                checkedChildren="Input"
+                unCheckedChildren="TextArea"
+                onChange={() => {
+                  setInput(!input);
+                  setIsDirty(true);
+                }}
+              />
+            </div>
+            <Form.Item
+              name="title"
+              rules={[{ required: true, message: 'Por favor ingrese un título' }]}
+            >
+              {input ? <Input {...sharedProps} /> : <Input.TextArea rows={3} {...sharedProps} />}
+            </Form.Item>
+          </Space>
           <Form.Item wrapperCol={{ span: 24 }}>
             <Button
               type="primary"
