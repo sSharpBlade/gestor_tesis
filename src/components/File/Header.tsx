@@ -6,19 +6,14 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   section: {
-    marginBottom: 10,
+    marginBottom: 20,
   },
   title: {
-    fontSize: 12,
+    fontSize: 14,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 5,
     fontWeight: "bold",
     textTransform: "uppercase",
-  },
-  subtitle: {
-    fontSize: 10,
-    textAlign: "center",
-    marginBottom: 10,
   },
   text: {
     fontSize: 10,
@@ -28,7 +23,7 @@ const styles = StyleSheet.create({
 
 function Header({ student, numero, tipo }) {
   return (
-    <View>
+    <View style={styles.section}>
       <Image src={banner}></Image>
       <Text style={styles.title}>Anexo {numero}</Text>
       <Text style={styles.title}>{tipo}</Text>
