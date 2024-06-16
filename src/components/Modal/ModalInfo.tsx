@@ -17,9 +17,10 @@ import {
   EditFilled,
   ExclamationCircleOutlined,
   PlusCircleOutlined,
-} from "@ant-design/icons"
+} from "@ant-design/icons";
 import EditarInforme from "../Inform/EditarInformeModal";
-import CrearInforme from "../Inform/CrearInformeModal"; // Importa CrearInforme // Asegúrate de que la ruta sea correcta
+import CrearInforme from "../Inform/CrearInformeModal";
+import DownloadButton from "../File/DownloadButton";
 
 interface ModalInfoProps {
   isModalOpen: boolean;
@@ -36,8 +37,10 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataReport, setDataReport] = useState<ReportType[]>([]);
-  const [isCrearInformeModalOpen, setIsCrearInformeModalOpen] = useState<boolean>(false);
-  const [isEditarInformeModalOpen, setIsEditarInformeModalOpen] = useState<boolean>(false);
+  const [isCrearInformeModalOpen, setIsCrearInformeModalOpen] =
+    useState<boolean>(false);
+  const [isEditarInformeModalOpen, setIsEditarInformeModalOpen] =
+    useState<boolean>(false);
   const [selectedReport, setSelectedReport] = useState<ReportType | null>(null);
   // const navigate = useNavigate();
 
@@ -97,7 +100,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
     {
       title: "Titulo",
       dataIndex: "issue",
-      width: 70,
+      width: 150,
     },
     {
       title: "%",
@@ -106,16 +109,16 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
     },
     {
       title: "Opciones",
-      width: 55,
+      width: 50,
       render: (dataReport) => (
         <div className="content-center">
           <Button
             className="border-0 bg-transparent"
             onClick={() => {
               if (dataReport.idReport) {
-                setSelectedReport(dataReport);  // Guardar el informe seleccionado
+                setSelectedReport(dataReport); // Guardar el informe seleccionado
                 setIsEditarInformeModalOpen(true);
-                console.log(dataReport)
+                console.log(dataReport);
 
                 if (dataReport.signed != null) {
                   openNotification(
@@ -144,7 +147,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             title="Eliminar informe"
             description={"Se eliminará el informe: " + dataReport.issue}
             onConfirm={() => confirm(dataReport.idReport)}
-            onOpenChange={() => { }}
+            onOpenChange={() => {}}
           >
             <Button className="border-0 bg-transparent">
               <DeleteOutlined />
@@ -177,6 +180,12 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
+        width={1000}
+        styles={{
+          mask: {
+            backdropFilter: "blur(10px)",
+          },
+        }}
       >
         <p>
           <b>Cédula:</b> {student.id}
@@ -232,10 +241,11 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
           }))}
           loading={loading}
           pagination={{
-            pageSize: 5,
+            pageSize: 3,
             hideOnSinglePage: true,
           }}
         />
+        <DownloadButton student={student}></DownloadButton>
       </Modal>
       <CrearInforme
         idThesis={student.idThesis}
@@ -248,7 +258,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
           handleOk={() => setIsEditarInformeModalOpen(false)}
           handleCancel={() => setIsEditarInformeModalOpen(false)}
           student={student}
-          dataReport={selectedReport}  
+          dataReport={selectedReport}
         />
       )}
     </>
