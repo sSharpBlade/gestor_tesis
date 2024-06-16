@@ -7,4 +7,5 @@ export interface DataType {
   approvalDate: Date;
   state: string;
   percentage: number;
+  nameTeacher: string;
 }
