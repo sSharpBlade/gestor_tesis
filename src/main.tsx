@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from './App'; // Asegúrate de ajustar la ruta según tu estructura de carpetas
+import App from './App'; 
 
 //
 //<ActivityTable id={1} />

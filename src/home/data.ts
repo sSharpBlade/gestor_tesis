@@ -22,6 +22,7 @@ async function fetchData(idTeacher: number): Promise<void> {
       issue: item.issue,
       approvalDate: item.approvalDate,
       idThesis: item.idThesis,
+      nameTeacher: item.student.teacher.name,
     }));
   } catch (error) {
     console.error("Error al obtener los datos:", error);

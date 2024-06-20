@@ -17,9 +17,10 @@ import {
   EditFilled,
   ExclamationCircleOutlined,
   PlusCircleOutlined,
-} from "@ant-design/icons"
-import { useNavigate } from "react-router-dom";
-import FormularioReporte from "../Report/ReportModal"; // Asegúrate de que la ruta sea correcta
+} from "@ant-design/icons";
+import EditarInforme from "../Inform/EditarInformeModal";
+import CrearInforme from "../Inform/CrearInformeModal";
+import DownloadButton from "../File/DownloadButton";
 
 interface ModalInfoProps {
   isModalOpen: boolean;
@@ -36,8 +37,12 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [dataReport, setDataReport] = useState<ReportType[]>([]);
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false); // Estado para controlar la visibilidad del nuevo modal
-  const navigate = useNavigate();
+  const [isCrearInformeModalOpen, setIsCrearInformeModalOpen] =
+    useState<boolean>(false);
+  const [isEditarInformeModalOpen, setIsEditarInformeModalOpen] =
+    useState<boolean>(false);
+  const [selectedReport, setSelectedReport] = useState<ReportType | null>(null);
+  // const navigate = useNavigate();
 
   const confirm = async (idReport: number) => {
     return new Promise(async (resolve) => {
@@ -95,7 +100,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
     {
       title: "Titulo",
       dataIndex: "issue",
-      width: 70,
+      width: 150,
     },
     {
       title: "%",
@@ -104,15 +109,17 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
     },
     {
       title: "Opciones",
-      width: 55,
+      width: 50,
       render: (dataReport) => (
         <div className="content-center">
           <Button
             className="border-0 bg-transparent"
             onClick={() => {
               if (dataReport.idReport) {
-                console.log(dataReport)
-                navigate("/informeModificar2",{ state: { student, dataReport} });
+                setSelectedReport(dataReport); // Guardar el informe seleccionado
+                setIsEditarInformeModalOpen(true);
+                console.log(dataReport);
+
                 if (dataReport.signed != null) {
                   openNotification(
                     true,
@@ -140,7 +147,7 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             title="Eliminar informe"
             description={"Se eliminará el informe: " + dataReport.issue}
             onConfirm={() => confirm(dataReport.idReport)}
-            onOpenChange={() => { }}
+            onOpenChange={() => {}}
           >
             <Button className="border-0 bg-transparent">
               <DeleteOutlined />
@@ -173,9 +180,15 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
         onOk={handleOk}
         onCancel={handleCancel}
         footer={false}
+        width={1000}
+        styles={{
+          mask: {
+            backdropFilter: "blur(10px)",
+          },
+        }}
       >
         <p>
-          <b>Cédula:</b> {student.id} 
+          <b>Cédula:</b> {student.id}
         </p>
         <p>
           <b>Nombre:</b> {student.name}
@@ -211,9 +224,11 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
             disabled={student.percentage === 100}
             className="border-0 bg-transparent"
             onClick={() => {
-              setIsFormOpen(true);
+              //setIdThesis(student.idThesis); // Guardar el idThesis
+              //setIsFormOpen(true); // Abrir el modal
+              setIsCrearInformeModalOpen(true);
               console.log(student.idThesis);
-            }} // Cambia el estado para mostrar el nuevo modal
+            }}
           >
             <PlusCircleOutlined />
           </Button>
@@ -226,20 +241,26 @@ const ModalInfo: React.FC<ModalInfoProps> = ({
           }))}
           loading={loading}
           pagination={{
-            pageSize: 5,
+            pageSize: 3,
             hideOnSinglePage: true,
           }}
         />
-        {/* Modal para el FormularioReporte */}
-        <Modal
-          title="Agregar Informe"
-          open={isFormOpen}
-          onCancel={() => setIsFormOpen(false)} // Función para cerrar el modal
-          footer={null}
-        >
-          <FormularioReporte student={student}/>
-        </Modal>
+        <DownloadButton student={student}></DownloadButton>
       </Modal>
+      <CrearInforme
+        idThesis={student.idThesis}
+        isModalOpen={isCrearInformeModalOpen}
+        handleCancel={() => setIsCrearInformeModalOpen(false)}
+      />
+      {selectedReport && (
+        <EditarInforme
+          isModalOpen={isEditarInformeModalOpen}
+          handleOk={() => setIsEditarInformeModalOpen(false)}
+          handleCancel={() => setIsEditarInformeModalOpen(false)}
+          student={student}
+          dataReport={selectedReport}
+        />
+      )}
     </>
   );
 };
