@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
   section: {
     marginBottom: 10,
   },
+  tutor: {
+    fontSize: 12,
+    marginTop: 10,
+    textAlign: "center",
+  },
   subtitle: {
     textTransform: "uppercase",
     fontSize: 12,
@@ -32,6 +37,14 @@ const styles = StyleSheet.create({
   tableCell: {
     margin: 5,
     fontSize: 10,
+    textTransform: "uppercase",
+  },
+  activityList: {
+    marginLeft: 10,
+  },
+  activityItem: {
+    fontSize: 10,
+    margin: 5,
     textTransform: "uppercase",
   },
   teacherName: {
@@ -72,6 +85,66 @@ const Anexo11 = ({ student }) => {
     getCurrentDate();
   }, []);
 
+  const groupActivitiesByMonth = (activities) => {
+    const grouped = activities.reduce((acc, activity) => {
+      const date = new Date(activity.dateActivity);
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      const key = `${year}-${month}`;
+
+      if (!acc[key]) {
+        acc[key] = {
+          activities: [],
+          startDate: activity.dateActivity,
+          endDate: activity.dateActivity,
+        };
+      }
+
+      acc[key].activities.push(activity);
+      acc[key].endDate = activity.dateActivity;
+
+      return acc;
+    }, {});
+
+    const groups = Object.values(grouped).map((group) => ({
+      startDate: group.startDate,
+      endDate: group.endDate,
+      activities: group.activities,
+    }));
+
+    if (groups.length > 0) {
+      groups[0].startDate = groups[0].activities[0].dateActivity;
+      groups[0].endDate =
+        new Date(groups[0].endDate).toISOString().slice(0, 7) + "-31";
+    }
+
+    if (groups.length > 1) {
+      for (let i = 1; i < groups.length - 1; i++) {
+        const date = new Date(groups[i].startDate);
+        groups[i].startDate = new Date(date.getFullYear(), date.getMonth(), 1)
+          .toISOString()
+          .slice(0, 10);
+        groups[i].endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+          .toISOString()
+          .slice(0, 10);
+      }
+    }
+
+    if (groups.length > 1) {
+      const lastGroup = groups[groups.length - 1];
+      const date = new Date(lastGroup.startDate);
+      lastGroup.startDate = new Date(date.getFullYear(), date.getMonth(), 1)
+        .toISOString()
+        .slice(0, 10);
+      lastGroup.endDate =
+        lastGroup.activities[lastGroup.activities.length - 1].dateActivity;
+    }
+
+    return groups;
+  };
+
+  const groupedActivities = groupActivitiesByMonth(activities);
+
   return (
     <Document>
       <Page size="A4">
@@ -111,13 +184,28 @@ const Anexo11 = ({ student }) => {
                 <Text style={styles.tableCell}>ACTIVIDAD</Text>
               </View>
             </View>
-            {activities.map((activity) => (
-              <View style={styles.tableRow} key={activity.idActivity}>
+            {groupedActivities.map((group, index) => (
+              <View style={styles.tableRow} key={index}>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>{activity.dateActivity}</Text>
+                  <Text style={styles.tableCell}>
+                    {`Del ${new Date(
+                      group.startDate
+                    ).toLocaleDateString()} al ${new Date(
+                      group.endDate
+                    ).toLocaleDateString()}`}
+                  </Text>
                 </View>
                 <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>{activity.description}</Text>
+                  <View style={styles.activityList}>
+                    {group.activities.map((activity) => (
+                      <Text
+                        style={styles.activityItem}
+                        key={activity.idActivity}
+                      >
+                        • {activity.description}
+                      </Text>
+                    ))}
+                  </View>
                 </View>
               </View>
             ))}
@@ -128,6 +216,7 @@ const Anexo11 = ({ student }) => {
           <Text
             style={[styles.teacherName]}
           >{`Ing. ${student.nameTeacher}`}</Text>
+          <Text style={styles.tutor}>{"TUTOR TRABAJO TITULACIÓN"}</Text>
         </View>
       </Page>
     </Document>
