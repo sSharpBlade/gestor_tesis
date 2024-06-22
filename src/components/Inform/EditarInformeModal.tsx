@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Modal, Input, DatePicker, InputNumber, Form } from 'antd';
 import ActivityTable from '../Activities/table';
+import DownloadButtonAnexo5 from '../FileAnexo5/DownloadButton5';
 
 interface Student {
   career: string;
@@ -123,6 +124,7 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
             <Button type="primary" htmlType="submit">
               Submit
             </Button>
+            <DownloadButtonAnexo5 student={student} idReport={dataReport.idReport} />
           </Form.Item>
         </Form>
       </Modal>
