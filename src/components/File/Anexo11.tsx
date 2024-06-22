@@ -58,6 +58,23 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#000",
   },
+  footer: {
+    position: "absolute",
+    bottom: 10,
+    left: 15,
+    right: 15,
+    fontSize: 5,
+    textAlign: "center",
+    borderTopWidth: 1,
+    borderTopColor: "#8B0000",
+    paddingTop: 5,
+  },
+  pageNumber: {
+    position: "absolute",
+    fontSize: 8,
+    bottom: 10,
+    right: 15,
+  },
 });
 
 const Anexo11 = ({ student }) => {
@@ -147,7 +164,7 @@ const Anexo11 = ({ student }) => {
 
   return (
     <Document>
-      <Page size="A4">
+      <Page size="A4" style={{ position: "relative" }}>
         <Header
           student={student}
           tipo={"INFORME FINAL DEL AVANCE DEL TRABAJO DE TITULACIÓN"}
@@ -218,6 +235,18 @@ const Anexo11 = ({ student }) => {
           >{`Ing. ${student.nameTeacher}`}</Text>
           <Text style={styles.tutor}>{"TUTOR TRABAJO TITULACIÓN"}</Text>
         </View>
+        <View style={styles.footer}>
+          <Text>
+            INSTRUCTIVO DEL REGLAMENTO PARA LA TITULACIÓN DE GRADO EN LA
+            UNIVERSIDAD TÉCNICA DE AMBATO
+          </Text>
+        </View>
+        <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) =>
+            `Página ${pageNumber} de ${totalPages}`
+          }
+        />
       </Page>
     </Document>
   );
