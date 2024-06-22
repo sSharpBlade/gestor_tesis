@@ -16,6 +16,7 @@ export const request = async (id: number): Promise<ActivityType[]> => {
     }
 
     const val = (await response.json()) as ActivityType[];
+    console.log(val)
     return val;
   } catch (error) {
     console.error("Error:", error);

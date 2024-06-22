@@ -58,7 +58,7 @@ const Anexo5 = ({ student,idReport }) => {
       console.log("Estas actividades : "+data)
     };
     getActivities();
-  }, []);
+  },[idReport]);
 
   useEffect(() => {
     const getCurrentDate = () => {
