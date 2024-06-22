@@ -1,12 +1,21 @@
-import { View, Text, StyleSheet, Image } from "@react-pdf/renderer";
+import { View, Text, StyleSheet, Image, Font } from "@react-pdf/renderer";
 import banner from "../../images/banner.jpeg";
+
+Font.register({
+  family: "Times New Roman",
+  src: "/src/assets/times_new_roman.ttf",
+  fontStyle: "normal",
+  fontWeight: "normal",
+});
 
 const styles = StyleSheet.create({
   page: {
     padding: 30,
+    fontFamily: "Times New Roman",
   },
   section: {
     marginBottom: 20,
+    fontFamily: "Times New Roman",
   },
   title: {
     fontSize: 12,
@@ -14,10 +23,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontWeight: "bold",
     textTransform: "uppercase",
+    fontFamily: "Times New Roman",
   },
   text: {
     fontSize: 10,
     marginBottom: 5,
+    fontFamily: "Times New Roman",
   },
   Anexo: {
     fontSize: 12,
@@ -26,6 +37,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
     fontWeight: "bold",
     textTransform: "uppercase",
+    fontFamily: "Times New Roman",
   },
 });
 
