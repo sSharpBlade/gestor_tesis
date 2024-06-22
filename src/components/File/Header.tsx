@@ -9,9 +9,9 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 14,
+    fontSize: 12,
     textAlign: "center",
-    marginBottom: 5,
+    marginBottom: 10,
     fontWeight: "bold",
     textTransform: "uppercase",
   },
@@ -19,13 +19,21 @@ const styles = StyleSheet.create({
     fontSize: 10,
     marginBottom: 5,
   },
+  Anexo: {
+    fontSize: 12,
+    textAlign: "center",
+    marginBottom: 10,
+    marginTop: 15,
+    fontWeight: "bold",
+    textTransform: "uppercase",
+  },
 });
 
 function Header({ student, numero, tipo }) {
   return (
     <View style={styles.section}>
-      <Image src={banner}></Image>
-      <Text style={styles.title}>Anexo {numero}</Text>
+      {/* <Image src={banner}></Image> */}
+      <Text style={styles.Anexo}>Anexo {numero}</Text>
       <Text style={styles.title}>{tipo}</Text>
       <Text style={styles.title}>Universidad Técnica de Ambato</Text>
       <Text style={styles.title}>

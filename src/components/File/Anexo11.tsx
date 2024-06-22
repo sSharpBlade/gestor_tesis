@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     textTransform: "uppercase",
-    fontSize: 12,
+    fontSize: 10,
     marginBottom: 10,
     marginLeft: 15,
   },
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   teacherName: {
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 10,
   },
   signatureLine: {
     marginHorizontal: 150,
