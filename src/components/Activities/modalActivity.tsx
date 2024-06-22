@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, DatePicker, Input, message } from "antd";
 import moment from "moment";
-import { ActivityType } from "./activityType";  // Asegúrate de importar la interfaz
+import { ActivityType } from "./activityType";  
 import { saveActivities, updateActivities } from "./activity.hooks";
 
 interface MyModalProps {

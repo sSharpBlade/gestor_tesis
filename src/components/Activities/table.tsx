@@ -96,7 +96,12 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ id }) => {
         selectedActivity={selectedActivity}
         onClose={() => setIsModalVisible(false)}
       />
-      <Table columns={columns} dataSource={activities} rowKey="idActivity" />
+      <Table columns={columns} dataSource={activities}  
+      pagination={{
+        pageSize: 3,
+        hideOnSinglePage: true,
+      }}
+      rowKey="idActivity" />
     </>
   );
 };

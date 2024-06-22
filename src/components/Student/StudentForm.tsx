@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './StudentForm.module.css';
+import styles from './StudentForm.module.css';
 
 interface StudentFormProps {
   onSubmit: (data: any) => Promise<boolean>;
-  TeacherID:number
+  TeacherID: number;
 }
 
 interface FormData {
@@ -18,9 +18,9 @@ interface FormData {
   approvalDate: string;
 }
 
-const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit }) => {
-  const { register, formState: { errors }, handleSubmit, setValue,reset } = useForm<FormData>();
-  
+const StudentForm: React.FC<StudentFormProps> = ({ TeacherID, onSubmit }) => {
+  const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm<FormData>();
+
   const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
     const formattedData = {
       student: {
@@ -38,8 +38,8 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit }) => {
     console.log(formattedData)
     const isSuccess = await onSubmit(formattedData);
     if (isSuccess) {
-      reset(); // Cerrar el modal si la solicitud fue exitosa
-    } 
+      reset(); // Reset form if the request was successful
+    }
   };
 
   const handleNumericInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,12 +83,12 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit }) => {
   }, [errors.issue]);
 
   return (
-    <div className='container'>
+    <div className={styles.container}>
       <ToastContainer />
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
         <div>
           <label>Cedula</label>
-          <input type="text"  {...register('cedula', {
+          <input type="text" {...register('cedula', {
             required: true,
             minLength: 10,
             onChange: handleNumericInputChange
@@ -96,15 +96,11 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit }) => {
         </div>
         <div>
           <label>Nombre</label>
-          <input type="text" {...register('firstname', {
-            required: true
-          })} />
+          <input type="text" {...register('firstname', { required: true })} />
         </div>
         <div>
           <label>Apellido</label>
-          <input type="text" {...register('lastname', {
-            required: true
-          })} />
+          <input type="text" {...register('lastname', { required: true })} />
         </div>
         <div>
           <label>Carrera</label>
@@ -118,9 +114,7 @@ const StudentForm: React.FC<StudentFormProps> = ({TeacherID, onSubmit }) => {
         </div>
         <div>
           <label>Tema</label>
-          <input type="text" {...register('issue', {
-            required: true
-          })} />
+          <input type="text" {...register('issue', { required: true })} />
         </div>
         <div>
           <label>Fecha Aprobado</label>
