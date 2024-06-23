@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import styles from './StudentForm.module.css';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { ToastContainer } from 'react-toastify';
+import { Input, Button, Select, Form, DatePicker } from 'antd';
+import dayjs from 'dayjs';
 
 interface StudentFormProps {
   onSubmit: (data: any) => Promise<boolean>;
@@ -18,8 +17,11 @@ interface FormData {
   approvalDate: string;
 }
 
+const { TextArea } = Input;
+const { Option } = Select;
+
 const StudentForm: React.FC<StudentFormProps> = ({ TeacherID, onSubmit }) => {
-  const { register, formState: { errors }, handleSubmit, setValue, reset } = useForm<FormData>();
+  const { control, formState: { errors }, handleSubmit,  reset } = useForm<FormData>();
 
   const handleFormSubmit: SubmitHandler<FormData> = async (data) => {
     const formattedData = {
@@ -42,86 +44,148 @@ const StudentForm: React.FC<StudentFormProps> = ({ TeacherID, onSubmit }) => {
     }
   };
 
-  const handleNumericInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    if (/^\d*$/.test(newValue)) {
-      setValue(e.target.name as keyof FormData, newValue);
-    } else {
-      setValue(e.target.name as keyof FormData, newValue.slice(0, -1));
-    }
-    if (newValue.length === 11) {
-      setValue(e.target.name as keyof FormData, newValue.slice(0, -1));
-    }
+  const handleNumericInput = (value: string) => {
+    const numericValue = value.replace(/\D/g, '');
+    return numericValue.slice(0, 10); // Limita a 10 dígitos
+  };
+  const disabledDate = (current:  dayjs.Dayjs) => {
+    return current && current >= dayjs().endOf('day');
   };
 
-  useEffect(() => {
-    if (errors.cedula) {
-      if (errors.cedula.type === 'required') {
-        toast.error('Cedula es un campo requerido');
-      } else if (errors.cedula.type === 'minLength') {
-        toast.error('Cedula requiere una longitud mínima de 10 caracteres');
-      }
-    }
-  }, [errors.cedula]);
-
-  useEffect(() => {
-    if (errors.firstname && errors.firstname.type === 'required') {
-      toast.error('Nombre es un campo requerido');
-    }
-  }, [errors.firstname]);
-
-  useEffect(() => {
-    if (errors.lastname && errors.lastname.type === 'required') {
-      toast.error('Apellido es un campo requerido');
-    }
-  }, [errors.lastname]);
-
-  useEffect(() => {
-    if (errors.issue && errors.issue.type === 'required') {
-      toast.error('Tema es un campo requerido');
-    }
-  }, [errors.issue]);
-
   return (
-    <div className={styles.container}>
+    <div style={{ maxWidth: '700px', margin: '0 auto' }}>
       <ToastContainer />
-      <form className={styles.form} onSubmit={handleSubmit(handleFormSubmit)}>
-        <div>
-          <label>Cedula</label>
-          <input type="text" {...register('cedula', {
-            required: true,
-            minLength: 10,
-            onChange: handleNumericInputChange
-          })} />
-        </div>
-        <div>
-          <label>Nombre</label>
-          <input type="text" {...register('firstname', { required: true })} />
-        </div>
-        <div>
-          <label>Apellido</label>
-          <input type="text" {...register('lastname', { required: true })} />
-        </div>
-        <div>
-          <label>Carrera</label>
-          <select {...register('idCareer')}>
-            <option value="1">Software</option>
-            <option value="2">Industrial</option>
-            <option value="3">Telecomunicaciones</option>
-            <option value="4">Tegnologías de la Comunicación</option>
-            <option value="5">Automatización y Robótica</option>
-          </select>
-        </div>
-        <div>
-          <label>Tema</label>
-          <input type="text" {...register('issue', { required: true })} />
-        </div>
-        <div>
-          <label>Fecha Aprobado</label>
-          <input type="date" {...register('approvalDate')} />
-        </div>
-        <input type="submit" value="Asignar" />
-      </form>
+      <Form 
+        layout="vertical" 
+        onFinish={handleSubmit(handleFormSubmit)}
+        style={{ fontSize: '16px' }} // Aumenta el tamaño de letra general
+      >
+        <Form.Item 
+          label={<span style={{ display: 'block', textAlign: 'center' }}>Cédula</span>} 
+          required
+          validateStatus={errors.cedula ? 'error' : ''}
+          help={errors.cedula?.message}
+        >
+          <Controller
+            name="cedula"
+            control={control}
+            rules={{ 
+              required: "Cédula es requerida", 
+              pattern: {
+                value: /^\d{10}$/,
+                message: "Cédula debe tener 10 dígitos numéricos"
+              }
+            }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                onChange={(e) => field.onChange(handleNumericInput(e.target.value))}
+                placeholder="Ingrese la cédula"
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item 
+          label={<span style={{ display: 'block', textAlign: 'center' }}>Nombre</span>} 
+          required
+          validateStatus={errors.firstname ? 'error' : ''}
+          help={errors.firstname ? 'Nombre es requerido' : ''}
+        >
+          <Controller
+            name="firstname"
+            control={control}
+            rules={{ required: 'Nombre es requerido' }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Ingrese el nombre"
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item 
+          label={<span style={{ display: 'block', textAlign: 'center' }}>Apellido</span>} 
+          required
+          validateStatus={errors.lastname ? 'error' : ''}
+          help={errors.lastname ? 'Apellido es requerido' : ''}
+        >
+          <Controller
+            name="lastname"
+            control={control}
+            rules={{ required: 'Apellido es requerido' }}
+            render={({ field }) => (
+              <Input
+                {...field}
+                placeholder="Ingrese el apellido"
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item 
+          label={<span style={{ display: 'block', textAlign: 'center' }}>Carrera</span>}
+          required
+          validateStatus={errors.idCareer ? 'error' : ''}
+          help={errors.idCareer ? 'Carrera es requerida' : ''}
+        >
+          <Controller
+          defaultValue='1'
+            name="idCareer"
+            control={control}
+            render={({ field }) => (
+              <Select {...field} placeholder="Seleccione la carrera" >
+                <Option value="1">Software</Option>
+                <Option value="2">Industrial</Option>
+                <Option value="3">Telecomunicaciones</Option>
+                <Option value="4">Tecnologías de la Comunicación</Option>
+                <Option value="5">Automatización y Robótica</Option>
+              </Select>
+            )}
+          />
+        </Form.Item>
+        <Form.Item 
+          label={<span style={{ display: 'block', textAlign: 'center' }}>Tema</span>} 
+          required
+          validateStatus={errors.issue ? 'error' : ''}
+          help={errors.issue ? 'Tema es requerido' : ''}
+        >
+          <Controller
+            name="issue"
+            control={control}
+            rules={{ required: 'Tema es requerido' }}
+            render={({ field }) => (
+              <TextArea
+                {...field}
+                placeholder="Ingrese el tema"
+                rows={2}
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item 
+          label={<span style={{ display: 'block', textAlign: 'center' }}>Fecha Aprobado</span>}
+          required
+          validateStatus={errors.approvalDate ? 'error' : ''}
+          help={errors.approvalDate ? 'Fecha es requerida' : ''}
+        >
+          <Controller
+            name="approvalDate"
+            control={control}
+            render={({ field }) => (
+              <DatePicker 
+                {...field} 
+                style={{ width: '100%' }}
+                placeholder="Seleccione la fecha"
+                disabledDate={disabledDate}
+              />
+            )}
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" block>
+            Asignar
+          </Button>
+        </Form.Item>
+      </Form>
     </div>
   );
 };

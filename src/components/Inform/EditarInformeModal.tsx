@@ -118,7 +118,7 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
           </Form.Item>
           <Form.Item>
             <b>ACTIVIDADES</b>
-            <ActivityTable id={dataReport.idReport} />
+            <ActivityTable id={dataReport.idReport} defaultDate={} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
