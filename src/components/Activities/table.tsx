@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { Table, Button, message } from "antd";
+import { Table, Button, message, Modal } from "antd";
 import { EditFilled, DeleteOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import MyModal from "./modalActivity";
-import { ActivityType } from "./activityType";  // Asegúrate de importar la interfaz
+import { ActivityType } from "./activityType";
 import { deleteActivities, request, saveActivities, updateActivities } from "./activity.hooks";
 
 interface ActivityTableProps {
   id: number; 
-  
   defaultDate: string; 
 }
 
-const ActivityTable: React.FC<ActivityTableProps> = ({ id,defaultDate }) => {
+const ActivityTable: React.FC<ActivityTableProps> = ({ id, defaultDate }) => {
   const [activities, setActivities] = useState<ActivityType[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<ActivityType | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState<boolean>(false);
+
+  const [deleteTarget, setDeleteTarget] = useState<ActivityType | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,13 +56,26 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ id,defaultDate }) => {
   };
 
   const handleDeleteClick = async (record: ActivityType) => {
+    setDeleteTarget(record);
+    setIsDeleteModalVisible(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deleteTarget) return;
+
     try {
-      await deleteActivities(record.idActivity);
-      setActivities(activities.filter(activity => activity.idActivity !== record.idActivity));
+      await deleteActivities(deleteTarget.idActivity);
+      setActivities(activities.filter(activity => activity.idActivity !== deleteTarget.idActivity));
       message.success("Actividad eliminada con éxito");
     } catch (error) {
       message.error("Error al eliminar la actividad");
     }
+
+    setIsDeleteModalVisible(false);
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalVisible(false);
   };
 
   const columns = [
@@ -99,12 +114,20 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ id,defaultDate }) => {
         defaultDate={defaultDate}
         onClose={() => setIsModalVisible(false)}
       />
+      <Modal
+        title="Confirmar eliminación"
+        visible={isDeleteModalVisible}
+        onOk={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      >
+        <p>¿Estás seguro de que deseas eliminar esta actividad?</p>
+      </Modal>
       <Table columns={columns} dataSource={activities}  
-      pagination={{
-        pageSize: 3,
-        hideOnSinglePage: true,
-      }}
-      rowKey="idActivity" />
+        pagination={{
+          pageSize: 3,
+          hideOnSinglePage: true,
+        }}
+        rowKey="idActivity" />
     </>
   );
 };
