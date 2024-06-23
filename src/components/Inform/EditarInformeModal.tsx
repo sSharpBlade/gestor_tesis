@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+
+
+import React, { useState, useEffect } from 'react';
 import { Button, Modal, Input, DatePicker, InputNumber, Form } from 'antd';
 import ActivityTable from '../Activities/table';
 import DownloadButtonAnexo5 from '../FileAnexo5/DownloadButton5';
+import dayjs from 'dayjs';
 
 interface Student {
   career: string;
@@ -33,6 +36,16 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
   const [form] = Form.useForm();
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+
+  useEffect(() => {
+    if (dataReport) {
+      form.setFieldsValue({
+        date: dataReport.date ? dayjs(dataReport.date) : null,
+        percentage: dataReport.percentage,
+        title: dataReport.issue
+      });
+    }
+  }, [dataReport, form]);
 
   const onFinish = async (values: any) => {
     const formattedDate = values.date.format('YYYY-MM-DD');
@@ -75,6 +88,7 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
       <Modal
         title={<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '14.5px' }}>INFORME MENSUAL DEL AVANCE DEL TRABAJO DE TITULACIÓN</div>}
         open={isModalOpen}
+        width={600}
         onCancel={handleCancel}
         footer={null}
       >
@@ -86,13 +100,13 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
           <p style={{ fontWeight: '' }}><b>TEMA DE INVESTIGACION:</b> {student.issue.toUpperCase()}</p>
         </div>
         <Form form={form} layout="vertical" onFinish={onFinish} style={{ gap: '8px' }}>
-          <Form.Item 
+        <Form.Item 
             label="Fecha" 
             name="date" 
             rules={[{ required: true, message: 'Por favor selecciona la fecha' }]}
             style={{ marginBottom: '8px' }}
           >
-            <DatePicker />
+            <DatePicker disabled style={{ pointerEvents: 'none' }} />
           </Form.Item>
           <Form.Item 
             label="Porcentaje de Avance" 
@@ -101,7 +115,6 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
             style={{ marginBottom: '8px' }}
           >
             <InputNumber<number>
-              defaultValue={dataReport.percentage}
               min={0}
               max={100}
               formatter={(value) => `${value}%`}
@@ -114,11 +127,11 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
             rules={[{ required: true, message: 'Por favor ingresa el título' }]}
             style={{ marginBottom: '8px' }}
           >
-            <Input defaultValue={dataReport.issue} />
+            <Input />
           </Form.Item>
           <Form.Item>
-            <b>ACTIVIDADES</b>
-            <ActivityTable id={dataReport.idReport} defaultDate={dataReport.date.toString()} />
+          <p style={{ paddingTop:'8px', paddingBottom:'8px' }}><b>ACTIVIDADES:</b></p>
+          <ActivityTable id={dataReport.idReport} defaultDate={dataReport.date.toString()} />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
@@ -131,7 +144,7 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
 
       <Modal
         title={<span style={{ color: 'green' }}>Éxito</span>}
-        visible={successModalVisible}
+        open={successModalVisible}
         onOk={handleSuccessOk}
         onCancel={() => setSuccessModalVisible(false)}
         footer={[
@@ -141,12 +154,12 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
         ]}
         width={300}
       >
-        <p>Informe enviado exitosamente</p>
+        <p>Informe Modificado con Éxito</p>
       </Modal>
 
       <Modal
         title={<span style={{ color: 'orange' }}>Error</span>}
-        visible={errorModalVisible}
+        open={errorModalVisible}
         onOk={handleErrorOk}
         onCancel={() => setErrorModalVisible(false)}
         footer={[

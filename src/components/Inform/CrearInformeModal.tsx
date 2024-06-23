@@ -1,11 +1,13 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Button, Modal, Input, DatePicker, Space, Switch, Form } from 'antd';
 import type { DatePickerProps, InputRef, FormProps } from 'antd';
+import dayjs from 'dayjs';
 
 interface Informe {
   date: string;
   title: string;
   idThesis: number;
+  additionalNotes?: string;
 }
 
 interface CrearInformeProps {
@@ -17,10 +19,22 @@ interface CrearInformeProps {
 const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, handleCancel }) => {
   const [input, setInput] = useState(true);
   const [isDirty, setIsDirty] = useState(false);
+  const [titleValue, setTitleValue] = useState('');
   const [form] = Form.useForm();
   const inputRef = useRef<InputRef>(null);
 
-  const onChange: DatePickerProps['onChange'] = ( dateString) => {
+  useEffect(() => {
+    if (!isModalOpen) {
+      setTitleValue('');
+      form.resetFields();
+      setIsDirty(false);
+    } else {
+      const lastDayOfMonth = dayjs().endOf('month');
+      form.setFieldsValue({ date: lastDayOfMonth });
+    }
+  }, [isModalOpen]);
+
+  const onChange: DatePickerProps['onChange'] = (dateString) => {
     form.setFieldsValue({ date: dateString });
     setIsDirty(true);
   };
@@ -28,7 +42,10 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
   const sharedProps = {
     style: { width: '100%', marginTop: '16px' },
     ref: inputRef,
-    onChange: () => setIsDirty(true),
+    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      setTitleValue(e.target.value);
+      setIsDirty(true);
+    },
   };
 
   const onFinish: FormProps['onFinish'] = async (values) => {
@@ -89,15 +106,12 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
   return (
     <>
       <Modal
-        title={<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>ANEXO 5</div>}
+        title={<div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>CREAR INFORME</div>}
         open={isModalOpen}
         onCancel={handleModalClose}
         footer={null}
         width={400}
       >
-        <div style={{ textAlign: 'center', marginBottom: '16px' }}>
-          <p style={{ fontWeight: 'bold' }}>Agregar Informe</p>
-        </div>
         <Form
           form={form}
           name="basic"
@@ -106,13 +120,13 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
-          <Space direction="vertical" style={{ width: '100%', marginTop: '16px' }}>
+          <Space direction="vertical" style={{ width: '100%', marginTop: '10px' }}>
             <Form.Item
               name="date"
               rules={[{ required: true, message: 'Por favor seleccione una fecha' }]}
             >
-              <p style={{ fontSize: '14px', fontWeight: 'bold' }}>Fecha :</p>
-              <DatePicker onChange={onChange} />
+              <p style={{ fontSize: '14px', fontWeight: 'bold', padding: '5px' }}>Fecha :</p>
+              <DatePicker onChange={onChange} defaultValue={dayjs().endOf('month')} />
             </Form.Item>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <p style={{ fontSize: '14px', fontWeight: 'bold', marginLeft: '8px' }}>Título :</p>
@@ -130,7 +144,13 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
               name="title"
               rules={[{ required: true, message: 'Por favor ingrese un título' }]}
             >
-              {input ? <Input {...sharedProps} /> : <Input.TextArea rows={3} {...sharedProps} />}
+              {input ? <Input {...sharedProps} value={titleValue} /> : <Input.TextArea rows={3} {...sharedProps} value={titleValue} />}
+            </Form.Item>
+            <Form.Item
+              name="additionalNotes"
+            >
+              <p style={{ fontSize: '14px', fontWeight: 'bold' }}>Notas Adicionales :</p>
+              <Input.TextArea rows={3} style={{ width: '100%', marginTop: '10px' }} />
             </Form.Item>
           </Space>
           <Form.Item wrapperCol={{ span: 24 }}>
