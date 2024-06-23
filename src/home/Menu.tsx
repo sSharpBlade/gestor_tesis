@@ -66,6 +66,13 @@ const Menu: React.FC<ListStudentsProps> = ({ teacherID, onDataChange }) => {
         open={showModal}
         onCancel={handleClose}
         footer={null}
+        width={800} // Aumenta el ancho del modal (en píxeles)
+        styles={{
+          body: {
+            height: '650px', // Aumenta la altura del contenido del modal
+            overflowY: 'auto' // Añade scroll vertical si el contenido es muy largo
+          }
+        }}
       >
         <StudentForm
           TeacherID={Number(teacherID)}

@@ -6,10 +6,12 @@ import { ActivityType } from "./activityType";  // Asegúrate de importar la int
 import { deleteActivities, request, saveActivities, updateActivities } from "./activity.hooks";
 
 interface ActivityTableProps {
-  id: number; // id of the report
+  id: number; 
+  
+  defaultDate: string; 
 }
 
-const ActivityTable: React.FC<ActivityTableProps> = ({ id }) => {
+const ActivityTable: React.FC<ActivityTableProps> = ({ id,defaultDate }) => {
   const [activities, setActivities] = useState<ActivityType[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<ActivityType | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -94,6 +96,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ id }) => {
         visible={isModalVisible}
         onSaveActivity={handleSaveActivity}
         selectedActivity={selectedActivity}
+        defaultDate={defaultDate}
         onClose={() => setIsModalVisible(false)}
       />
       <Table columns={columns} dataSource={activities}  
