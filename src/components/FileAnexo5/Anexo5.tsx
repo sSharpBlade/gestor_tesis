@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const Anexo5 = ({ student,idReport }) => {
+const Anexo5 = ({ student,idReport,refreshKey }) => {
   const [activities, setActivities] = useState<ActivityType[]>([]);
   const [currentDate, setCurrentDate] = useState<string>("");
 
@@ -109,7 +109,7 @@ const Anexo5 = ({ student,idReport }) => {
       console.log("Estas actividades : "+data)
     };
     getActivities();
-  },[idReport]);
+  },[idReport,refreshKey]);
 
   useEffect(() => {
     const getCurrentDate = () => {
