@@ -66,6 +66,9 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
 
       if (response.ok) {
         setSuccessModalVisible(true);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
       } else {
         setErrorModalVisible(true);
       }

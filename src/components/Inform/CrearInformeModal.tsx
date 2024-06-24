@@ -55,7 +55,7 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
       date: values.date.format('YYYY-MM-DD'),
     };
     console.log('Success:', informe);
-
+  
     try {
       const response = await fetch('http://localhost:3000/reports', {
         method: 'POST',
@@ -64,7 +64,7 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
         },
         body: JSON.stringify(informe),
       });
-
+  
       if (response.ok) {
         Modal.success({
           title: 'Éxito',
@@ -72,6 +72,9 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
         });
         handleCancel();
         setIsDirty(false);
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); // 1.5 segundos
       } else {
         throw new Error('Error en la creación del informe');
       }
@@ -82,6 +85,7 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
       });
     }
   };
+  
 
   const onFinishFailed: FormProps['onFinishFailed'] = (errorInfo) => {
     console.log('Failed:', errorInfo);
