@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import Anexo11 from "./Anexo11";
 import Button from "antd/es/button";
+import { message } from "antd";
 
 const DownloadButton = ({ student }) => {
   const [isClicked, setIsClicked] = useState(false);
@@ -26,6 +27,7 @@ const DownloadButton = ({ student }) => {
                 className="border-0 bg-transparent mt-3"
                 onClick={() =>
                   setTimeout(() => {
+                    message.info("PDF descargado");
                     setIsClicked(false);
                   }, 500)
                 }
