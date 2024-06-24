@@ -32,11 +32,17 @@ interface EditarInformeProps {
   dataReport: Inform;
 }
 
+
+
 const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, handleCancel, student, dataReport }) => {
   const [form] = Form.useForm();
   const [successModalVisible, setSuccessModalVisible] = useState(false);
   const [errorModalVisible, setErrorModalVisible] = useState(false);
-
+  
+  const [refreshKey, setRefreshKey] = useState(0);
+  const handleActivitiesUpdate = () => {
+    setRefreshKey(prevKey => prevKey + 1);
+  }
   useEffect(() => {
     if (dataReport) {
       form.setFieldsValue({
@@ -131,13 +137,13 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
           </Form.Item>
           <Form.Item>
           <p style={{ paddingTop:'8px', paddingBottom:'8px' }}><b>ACTIVIDADES:</b></p>
-          <ActivityTable id={dataReport.idReport} defaultDate={dataReport.date.toString()} />
+          <ActivityTable id={dataReport.idReport} defaultDate={dataReport.date.toString()} onActivitiesUpdate={handleActivitiesUpdate}/>
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Modificar
             </Button>
-            <DownloadButtonAnexo5 student={student} idReport={dataReport.idReport} />
+            <DownloadButtonAnexo5 student={student} idReport={dataReport.idReport} refreshKey={refreshKey}/>
           </Form.Item>
         </Form>
       </Modal>

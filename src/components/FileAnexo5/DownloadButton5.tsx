@@ -2,10 +2,10 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import Button from "antd/es/button";
 import Anexo5 from "./Anexo5";
 
-const DownloadButtonAnexo5 = ({ student, idReport }) => {
+const DownloadButtonAnexo5 = ({ student, idReport,refreshKey }) => {
   return (
     <PDFDownloadLink
-      document={<Anexo5 student={student} idReport={idReport}/>}
+      document={<Anexo5 student={student} idReport={idReport} refreshKey={refreshKey}/>}
       fileName={`${student.issue + " - " + student.name+ " - Anexo 5" }.pdf`}
     >
       {() => (
