@@ -135,7 +135,7 @@ const EditarInforme: React.FC<EditarInformeProps> = ({ isModalOpen, handleOk, ha
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Submit
+              Modificar
             </Button>
             <DownloadButtonAnexo5 student={student} idReport={dataReport.idReport} />
           </Form.Item>

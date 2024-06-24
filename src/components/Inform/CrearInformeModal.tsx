@@ -32,10 +32,10 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
       const lastDayOfMonth = dayjs().endOf('month');
       form.setFieldsValue({ date: lastDayOfMonth });
     }
-  }, [isModalOpen]);
+  }, [isModalOpen, form]);
 
-  const onChange: DatePickerProps['onChange'] = (dateString) => {
-    form.setFieldsValue({ date: dateString });
+  const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+    form.setFieldsValue({ date });
     setIsDirty(true);
   };
 
@@ -52,6 +52,7 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
     const informe: Informe = {
       ...values,
       idThesis,
+      date: values.date.format('YYYY-MM-DD'),
     };
     console.log('Success:', informe);
 
@@ -160,7 +161,7 @@ const CrearInforme: React.FC<CrearInformeProps> = ({ idThesis, isModalOpen, hand
               style={{ width: '100%' }}
               onClick={() => console.log(idThesis)}
             >
-              Submit
+              Generar Informe
             </Button>
           </Form.Item>
         </Form>
