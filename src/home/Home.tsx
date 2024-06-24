@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 import { getDatos, fetchData } from "./data";
 import ListStudents from "./ListStudents";
@@ -13,10 +13,10 @@ const Home: React.FC = () => {
   const [searchText, setSearchText] = useState<string>("");
   const [datos, setDatos] = useState<DataType[]>([]);
   const [reload, setReload] = useState<boolean>(false); // Estado para manejar la recarga
-  const teacherID = localStorage.getItem('teacherID');
+  const teacherID = localStorage.getItem("teacherID");
   const showSuccessMessage = () => {
-    toast.success('Estudiante asignado con éxito!');
-    handleDataChange()
+    toast.success("Estudiante asignado con éxito!");
+    handleDataChange();
   };
   useEffect(() => {
     if (teacherID) {
@@ -30,7 +30,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (!teacherID) {
-      navigate('/login'); // Redirige al usuario al login si no hay teacherID en localStorage
+      navigate("/login"); // Redirige al usuario al login si no hay teacherID en localStorage
       return;
     }
 
@@ -44,8 +44,7 @@ const Home: React.FC = () => {
   };
 
   const handleDataChange = () => {
-    setReload(!reload); 
-
+    setReload(!reload);
   };
 
   const filteredData = datos.filter(
@@ -55,11 +54,9 @@ const Home: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col h-screen bg-stone-300">
+    <div className="flex flex-col h-screen">
       <div className="flex justify-between p-4">
-
-        <Menu teacherID={Number(teacherID)} onDataChange={showSuccessMessage}  />
-
+        <Menu teacherID={Number(teacherID)} onDataChange={showSuccessMessage} />
       </div>
       <div className="flex justify-center items-center flex-grow">
         <div className="w-2/3 min-h-[809px]">

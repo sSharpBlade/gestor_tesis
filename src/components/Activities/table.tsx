@@ -7,10 +7,11 @@ import { deleteActivities, request, saveActivities, updateActivities } from "./a
 
 interface ActivityTableProps {
   id: number; 
-  defaultDate: string; 
+  defaultDate: string;
+  onActivitiesUpdate: () => void;
 }
 
-const ActivityTable: React.FC<ActivityTableProps> = ({ id, defaultDate }) => {
+const ActivityTable: React.FC<ActivityTableProps> = ({ id, defaultDate,onActivitiesUpdate }) => {
   const [activities, setActivities] = useState<ActivityType[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<ActivityType | null>(null);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -40,6 +41,7 @@ const ActivityTable: React.FC<ActivityTableProps> = ({ id, defaultDate }) => {
       }
       setSelectedActivity(null);
       setIsModalVisible(false);
+      onActivitiesUpdate()
     } catch (error) {
       message.error("Error al guardar la actividad");
     }
