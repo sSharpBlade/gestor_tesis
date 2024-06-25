@@ -178,8 +178,22 @@ const Anexo5 = ({ student,idReport,refreshKey }) => {
           <View style={styles.signatureLine}></View>
           <Text
             style={[styles.teacherName]}
-          >{`Ing. ${student.nameTeacher}`}</Text>
+          >{`Ing. ${student.nameTeacher}`}
+          </Text>
+          <Text style={styles.tutor}>{"TUTOR TRABAJO TITULACIÓN"}</Text>
         </View>
+        <View style={styles.footer}>
+          <Text>
+            INSTRUCTIVO DEL REGLAMENTO PARA LA TITULACIÓN DE GRADO EN LA
+            UNIVERSIDAD TÉCNICA DE AMBATO
+          </Text>
+        </View>
+        <Text
+          style={styles.pageNumber}
+          render={({ pageNumber, totalPages }) =>
+            `Página ${pageNumber} de ${totalPages}`
+          }
+        />
       </Page>
     </Document>
   );
