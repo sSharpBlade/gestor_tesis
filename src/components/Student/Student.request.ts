@@ -16,7 +16,8 @@ export const request = async(data:any):Promise<boolean>=>{
         const response = await fetch(url, method);
 
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            const errorData = await response.json();
+            throw new Error(errorData.message ||'Network response was not ok');
 
         }
 
@@ -24,8 +25,14 @@ export const request = async(data:any):Promise<boolean>=>{
         console.log('Success:', result);
         return true
     } catch (error) {
-        toast.error('Hubo un error al asignar el estudiante');
+        if (error.message.includes('La cédula no es correcta')) {
+            toast.error('La cédula proporcionada no es correcta');
+        } else if (error.message.includes('estudiante ya existe')) {
+            toast.error('El estudiante ya está registrado');
+        } else {
+            toast.error('Hubo un error al asignar el estudiante');
+        }
         console.error('Error:', error);
-        return false
+        return false;
     }
 }
