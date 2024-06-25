@@ -39,7 +39,7 @@ const DownloadButton = ({ student }) => {
         </PDFDownloadLink>
       ) : (
         <Button
-          // disabled={student.percentage !== 100}
+          disabled={student.percentage !== 100}
           className="border-0 bg-transparent mt-3"
           onClick={handleClick}
         >
