@@ -69,7 +69,7 @@ const ListStudents: React.FC<ListStudentsProps> = ({ data }) => {
       onFilter: (value, record) => record.state === value,
       render: (state) => {
         const color =
-          state === "En Proceso"
+          state === "En curso"
             ? "blue"
             : state === "Retirado"
             ? "red"
