@@ -4,7 +4,7 @@ import {
   BarsOutlined,
   DisconnectOutlined,
   DiffOutlined,
-  UnlockOutlined,
+  DashboardOutlined,
 } from "@ant-design/icons";
 import { request } from "../components/Student/Student.request";
 import StudentForm from "../components/Student/StudentForm";
@@ -16,8 +16,11 @@ interface ListStudentsProps {
 }
 const Menu: React.FC<ListStudentsProps> = ({ teacherID, onDataChange }) => {
   const [showModal, setShowModal] = useState(false);
+  const [showModalD, setShowModalD] = useState(false);
   const handleShow = () => setShowModal(true);
+  const handleShowD = () => setShowModalD(true);
   const handleClose = () => setShowModal(false);
+  const handleCloseD = () => setShowModalD(false);
   const navigate = useNavigate();
 
   const handleFormSubmit = async (data: any) => {
@@ -47,19 +50,25 @@ const Menu: React.FC<ListStudentsProps> = ({ teacherID, onDataChange }) => {
           icon={<DiffOutlined />}
           onClick={handleShow}
         />
-        {/* <FloatButton
-          tooltip={<div>Cambiar contraseña</div>}
-          icon={<UnlockOutlined />}
-          onClick={() => {
-            console.log("Cambiando contraseña...");
-          }}
-        /> */}
+        <FloatButton
+          tooltip={<div>Dashboard</div>}
+          icon={<DashboardOutlined />}
+          onClick={handleShowD}
+        />
         <FloatButton
           tooltip={<div>Cerrar Sesión</div>}
           icon={<DisconnectOutlined />}
           onClick={handleLogout}
         />
       </FloatButton.Group>
+
+      <Modal
+        title="Dashboard"
+        open={showModalD}
+        onCancel={handleCloseD}
+        footer={null}
+        width={10000}
+      ></Modal>
 
       <Modal
         title="Asignar Estudiante"
@@ -69,9 +78,9 @@ const Menu: React.FC<ListStudentsProps> = ({ teacherID, onDataChange }) => {
         width={800} // Aumenta el ancho del modal (en píxeles)
         styles={{
           body: {
-            height: '650px', // Aumenta la altura del contenido del modal
-            overflowY: 'auto' // Añade scroll vertical si el contenido es muy largo
-          }
+            height: "650px", // Aumenta la altura del contenido del modal
+            overflowY: "auto", // Añade scroll vertical si el contenido es muy largo
+          },
         }}
       >
         <StudentForm
