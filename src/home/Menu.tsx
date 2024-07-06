@@ -9,6 +9,7 @@ import {
 import { request } from "../components/Student/Student.request";
 import StudentForm from "../components/Student/StudentForm";
 import { useNavigate } from "react-router-dom";
+import Dashboard from "../components/Dashboard/Dashboard";
 
 interface ListStudentsProps {
   onDataChange: () => void;
@@ -63,12 +64,20 @@ const Menu: React.FC<ListStudentsProps> = ({ teacherID, onDataChange }) => {
       </FloatButton.Group>
 
       <Modal
+        centered
         title="Dashboard"
         open={showModalD}
         onCancel={handleCloseD}
         footer={null}
         width={10000}
-      ></Modal>
+        styles={{
+          body: {
+            height: "750px",
+          },
+        }}
+      >
+        <Dashboard />
+      </Modal>
 
       <Modal
         title="Asignar Estudiante"
